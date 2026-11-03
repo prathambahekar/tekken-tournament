@@ -1,0 +1,6 @@
+{
+  "name": "Tekken 7 Home Tournament",
+  "description": "Premium tournament manager for Tekken 7 with round-robin fixtures, live qualification standings, double-elimination knockout brackets, and 51-fighter roster picker.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

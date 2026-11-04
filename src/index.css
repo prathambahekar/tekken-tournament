@@ -60,15 +60,15 @@
   --fw-heavy: 800;
 
   /* Corner Radii System */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 14px;
   --radius-full: 9999px;
-  --radius: 12px;
-  --card-radius: 20px;
+  --radius: 8px;
+  --card-radius: 10px;
 
   /* Spacing Grid (4/8pt) */
   --space-1: 4px;
@@ -87,44 +87,44 @@
 
 [data-color-scheme="dark"],
 [data-theme="dark"] {
-  --bg: #0a0a0c;
-  --drawer-bg: #121212;
-  --surface: #141416;
-  --surface2: #18181b;
-  --surface3: #222328;
-  --card-surface: #141416;
-  --card-border: rgba(38, 38, 38, 0.8);
-  --card-hover: #18181b;
-  --border: rgba(38, 38, 38, 0.8);
-  --border2: rgba(60, 60, 65, 0.6);
-  --text: #ffffff;
-  --text-2: #d4d4d8;
-  --text-3: #71717a;
-  --accent: #f4f4f5;
-  --accent-soft: rgba(244, 244, 245, 0.14);
-  --accent-dark: #d4d4d8;
-  --accent-contrast: #09090b;
-  --accent-gradient: linear-gradient(135deg, #ffffff 0%, #f4f4f5 50%, #d4d4d8 100%);
-  --accent-gradient-soft: linear-gradient(135deg, rgba(244, 244, 245, 0.14) 0%, rgba(24, 24, 27, 0) 100%);
-  --accent-surface-gradient: linear-gradient(135deg, rgba(244, 244, 245, 0.14) 0%, rgba(24, 24, 27, 0.85) 100%);
-  --accent-border-soft: rgba(244, 244, 245, 0.14);
-  --credit: #34d399;
-  --credit-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --credit-bg: rgba(52, 211, 153, 0.12);
-  --credit-border: rgba(52, 211, 153, 0.28);
-  --credit-surface-gradient: linear-gradient(135deg, rgba(52,211,153,0.14) 0%, rgba(20,21,25,0.92) 100%);
-  --debit: #f87171;
-  --debit-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-  --debit-bg: rgba(248, 113, 113, 0.12);
-  --debit-border: rgba(248, 113, 113, 0.28);
-  --debit-surface-gradient: linear-gradient(135deg, rgba(248,113,113,0.14) 0%, rgba(20,21,25,0.92) 100%);
-  --amber: #fbbf24;
-  --amber-bg: rgba(251, 191, 36, 0.12);
-  --amber-border: rgba(251, 191, 36, 0.28);
-  --amber-surface-gradient: linear-gradient(135deg, rgba(251,191,36,0.14) 0%, rgba(20,21,25,0.92) 100%);
-  --info: #29b6f6;
-  --shadow: 0 2px 10px rgba(0,0,0,.6);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,.8);
+  --bg: #08090d;
+  --drawer-bg: #0c0d14;
+  --surface: #0d0f17;
+  --surface2: #131622;
+  --surface3: #1a1e2e;
+  --card-surface: #0d0f17;
+  --card-border: #222638;
+  --card-hover: #151826;
+  --border: #222638;
+  --border2: #343a52;
+  --text: #f4f5f8;
+  --text-2: #c4c9d8;
+  --text-3: #757c94;
+  --accent: #e51b24;
+  --accent-soft: rgba(229, 27, 36, 0.15);
+  --accent-dark: #b91c1c;
+  --accent-contrast: #ffffff;
+  --accent-gradient: linear-gradient(135deg, #f02835 0%, #e51b24 50%, #990000 100%);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(229, 27, 36, 0.22) 0%, rgba(245, 158, 11, 0.05) 100%);
+  --accent-surface-gradient: linear-gradient(135deg, rgba(229, 27, 36, 0.16) 0%, rgba(13, 15, 23, 0.95) 100%);
+  --accent-border-soft: rgba(229, 27, 36, 0.35);
+  --credit: #22c55e;
+  --credit-gradient: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  --credit-bg: rgba(34, 197, 94, 0.12);
+  --credit-border: rgba(34, 197, 94, 0.32);
+  --credit-surface-gradient: linear-gradient(135deg, rgba(34, 197, 94, 0.14) 0%, rgba(13, 15, 23, 0.95) 100%);
+  --debit: #e51b24;
+  --debit-gradient: linear-gradient(135deg, #f02835 0%, #b91c1c 100%);
+  --debit-bg: rgba(229, 27, 36, 0.14);
+  --debit-border: rgba(229, 27, 36, 0.35);
+  --debit-surface-gradient: linear-gradient(135deg, rgba(229, 27, 36, 0.16) 0%, rgba(13, 15, 23, 0.95) 100%);
+  --amber: #ffb703;
+  --amber-bg: rgba(255, 183, 3, 0.12);
+  --amber-border: rgba(255, 183, 3, 0.32);
+  --amber-surface-gradient: linear-gradient(135deg, rgba(255, 183, 3, 0.16) 0%, rgba(13, 15, 23, 0.95) 100%);
+  --info: #38bdf8;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.85);
 }
 
 [data-color-scheme="light"],
@@ -134,12 +134,15 @@
   --surface2: #f4f4f6;
   --surface3: #eaeaee;
   --card-surface: #ffffff;
-  --card-border: #e5e7eb;
+  --card-border: #e4e4e7;
   --card-hover: #f9fafb;
   --drawer-bg: #ffffff;
-  --border: #e5e7eb;
-  --border2: #d1d5db;
+  --border: #e4e4e7;
+  --border2: #d4d4d8;
   --text: #171717;
+  --text-2: #52525b;
+  --text-3: #71717a;
+  --accent: #18181b;
   --text-2: #52525b;
   --text-3: #71717a;
   --accent: #18181b;
@@ -175,8 +178,40 @@ body {
   color: var(--text);
   margin: 0;
   padding: 0;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tekken 7 Dark Mode: Volcanic Arena Atmosphere with Battle Stripes */
+[data-theme="dark"] body,
+[data-color-scheme="dark"] body,
+.dark body {
+  background-color: #08090d;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 90% -10%, rgba(229, 27, 36, 0.22) 0%, transparent 70%),
+    radial-gradient(circle 500px at 10% 90%, rgba(229, 27, 36, 0.08) 0%, transparent 60%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  background-attachment: fixed;
+}
+
+/* Tekken 7 Dark Mode: Metallic Surface Rim Highlights & Red Top Accent */
+[data-theme="dark"] .bg-\[var\(--surface\)\],
+[data-color-scheme="dark"] .bg-\[var\(--surface\)\],
+.dark .bg-\[var\(--surface\)\] {
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+[data-theme="dark"] .tekken-card,
+[data-color-scheme="dark"] .tekken-card,
+.dark .tekken-card {
+  border-top: 2px solid #e51b24;
 }
 
 .font-display {
@@ -194,4 +229,28 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--border2);
   border-radius: 9999px;
+}
+
+/* Hide scrollbars for clean touch carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile Safe Area Insets */
+.pb-safe {
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+}
+.pt-safe {
+  padding-top: max(0px, env(safe-area-inset-top, 0px));
+}
+
+/* Touch feedback helper */
+@media (hover: none) and (pointer: coarse) {
+  button, input, select, textarea {
+    touch-action: manipulation;
+  }
 }

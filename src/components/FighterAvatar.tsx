@@ -4,15 +4,16 @@ import { Fighter } from '../types';
 interface FighterAvatarProps {
   fighter?: Fighter | null;
   name?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
 const sizeMap = {
-  xs: 'w-6 h-6 text-[10px]',
+  xs: 'w-5 h-5 text-[9px]',
   sm: 'w-7 h-7 text-xs',
-  md: 'w-9 h-9 text-sm',
-  lg: 'w-11 h-11 text-base',
+  md: 'w-8 h-8 text-xs',
+  lg: 'w-10 h-10 text-sm',
+  xl: 'w-12 h-12 text-base',
 };
 
 function getInitials(name: string): string {
@@ -41,18 +42,18 @@ export const FighterAvatar: React.FC<FighterAvatarProps> = ({
   const hue = fighter ? fighter.hue : name ? computeHue(name) : 220;
 
   const bgStyle = {
-    backgroundColor: `hsl(${hue}, 44%, 26%)`,
-    borderColor: `hsl(${hue}, 48%, 40%)`,
+    backgroundColor: `hsl(${hue}, 48%, 28%)`,
+    borderColor: `hsl(${hue}, 52%, 42%)`,
     color: '#ffffff',
   };
 
   return (
     <div
-      className={`inline-flex items-center justify-center font-display font-bold shrink-0 rounded-lg border shadow-xs select-none ${sizeMap[size]} ${className}`}
+      className={`relative inline-flex items-center justify-center font-bold shrink-0 rounded-full border shadow-xs select-none tracking-tight ${sizeMap[size]} ${className}`}
       style={bgStyle}
       title={fighter ? `${fighter.name} (${fighter.style})` : name || 'Player'}
     >
-      <span className="tracking-tight uppercase">{displayText}</span>
+      <span className="leading-none uppercase">{displayText}</span>
     </div>
   );
 };

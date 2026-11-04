@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TournamentState } from '../types';
-import { ROSTER_MAP, ROSTER } from '../data/roster';
+import { TournamentState, TournamentFormat } from '../types';
+import { ROSTER_MAP } from '../data/roster';
 import { FighterAvatar } from './FighterAvatar';
 import {
   Minus,
@@ -16,6 +16,8 @@ import {
 
 interface PlayersTabProps {
   state: TournamentState;
+  format: TournamentFormat;
+  onChangeFormat: (format: TournamentFormat) => void;
   onUpdateNames: (newNames: string[]) => void;
   onUpdateChars: (newChars: (string | null)[]) => void;
   onChangePlayerCount: (newCount: number) => void;
@@ -27,6 +29,8 @@ interface PlayersTabProps {
 
 export const PlayersTab: React.FC<PlayersTabProps> = ({
   state,
+  format,
+  onChangeFormat,
   onUpdateNames,
   onUpdateChars,
   onChangePlayerCount,
@@ -50,13 +54,19 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
     setLocalNames(updated);
   };
 
+  const handleSaveNames = () => {
+    const sanitized = localNames.map((n, i) => n?.trim() || `Player ${i + 1}`);
+    setLocalNames(sanitized);
+    onUpdateNames(sanitized);
+    setSavedIndicator(true);
+    setTimeout(() => setSavedIndicator(false), 2000);
+  };
+
   const handleNameBlur = (index: number) => {
     const sanitized = [...localNames];
     sanitized[index] = sanitized[index]?.trim() || `Player ${index + 1}`;
     setLocalNames(sanitized);
     onUpdateNames(sanitized);
-    setSavedIndicator(true);
-    setTimeout(() => setSavedIndicator(false), 1500);
   };
 
   const handleShuffleSeeds = () => {
@@ -75,15 +85,6 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
     }
   };
 
-  const handleRandomizeAllFighters = () => {
-    const randomChars = state.names.map(() => {
-      const rand = ROSTER[Math.floor(Math.random() * ROSTER.length)];
-      return rand.id;
-    });
-    onUpdateChars(randomChars);
-    setShowMoreActions(false);
-  };
-
   const handleResetToDefaultNames = () => {
     const defaultNames = state.names.map((_, i) => `Player ${i + 1}`);
     setLocalNames(defaultNames);
@@ -97,146 +98,146 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
     setShowMoreActions(false);
   };
 
-  const handleRandomizeSingleFighter = (idx: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const rand = ROSTER[Math.floor(Math.random() * ROSTER.length)];
-    const updated = [...state.chars];
-    updated[idx] = rand.id;
-    onUpdateChars(updated);
-  };
-
   const playedCount = Object.keys(state.res).length;
   const n = state.names.length;
-  const totalRounds = 2 * (n + (n % 2) - 1);
-  const totalMatches = n * (n - 1);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-150">
-      {/* Minimal Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[var(--border)]">
-        <div>
+    <div className="space-y-4 animate-in fade-in duration-150">
+      {/* Main Tekken 7 Card with Red Top Border */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-6 shadow-xl space-y-5">
+        {/* Card Header: Gold Italic Title + Options */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-[var(--border)]/40">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold font-display tracking-tight text-[var(--text)]">
-              Players
-            </h2>
+            <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
+              PLAYERS
+            </h3>
+            <span className="text-xs text-[var(--text-3)] font-mono">
+              ({n} fighters)
+            </span>
             {savedIndicator && (
-              <span className="flex items-center gap-1 text-xs text-[var(--credit)] font-medium animate-in fade-in">
+              <span className="flex items-center gap-1 text-xs text-[var(--credit)] font-bold animate-in fade-in">
                 <Check className="w-3.5 h-3.5" /> Saved
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 text-xs text-[var(--text-3)] mt-0.5">
-            <span>{n} competitors</span>
-            <span aria-hidden="true">·</span>
-            <span>{totalMatches} matches</span>
-            <span aria-hidden="true">·</span>
-            <span>{totalRounds} rounds</span>
+
+          {/* Quick Controls: Format & Stepper */}
+          <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-end">
+            {/* Format Toggle: Single vs Double Round Robin */}
+            <div className="inline-flex items-center p-0.5 rounded-md bg-[var(--surface2)] text-xs font-semibold border border-[var(--border)]">
+              <button
+                type="button"
+                onClick={() => onChangeFormat('single')}
+                className={`px-2.5 py-1 rounded transition-all ${
+                  format === 'single'
+                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                }`}
+                title="Single Round-Robin"
+              >
+                Single Round
+              </button>
+              <button
+                type="button"
+                onClick={() => onChangeFormat('double')}
+                className={`px-2.5 py-1 rounded transition-all ${
+                  format === 'double'
+                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                }`}
+                title="Double Round-Robin"
+              >
+                Double Round
+              </button>
+            </div>
+
+            {/* Stepper */}
+            <div className="inline-flex items-center h-8 rounded-md bg-[var(--surface2)] text-xs font-semibold overflow-hidden border border-[var(--border)]">
+              <button
+                type="button"
+                onClick={() => onChangePlayerCount(n - 1)}
+                disabled={n <= 4}
+                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                aria-label="Decrease player count"
+              >
+                <Minus className="w-3 h-3" />
+              </button>
+              <span className="min-w-7 text-center px-1 tabular-nums font-mono text-xs text-[var(--text)] font-bold">
+                {n}
+              </span>
+              <button
+                type="button"
+                onClick={() => onChangePlayerCount(n + 1)}
+                disabled={n >= 16}
+                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                aria-label="Increase player count"
+              >
+                <Plus className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Actions Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowMoreActions((prev) => !prev)}
+                className={`h-8 w-8 rounded-md flex items-center justify-center transition-all border border-[var(--border)] ${
+                  showMoreActions
+                    ? 'bg-[var(--surface2)] text-[var(--text)]'
+                    : 'bg-[var(--surface2)] text-[var(--text-2)] hover:text-[var(--text)]'
+                }`}
+                title="More options"
+                aria-label="More options"
+              >
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+
+              {showMoreActions && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowMoreActions(false)}
+                  />
+                  <div className="absolute right-0 mt-1.5 w-48 rounded-md bg-[var(--surface)] shadow-2xl py-1 z-50 text-xs border border-[var(--border2)]">
+                    <button
+                      onClick={handleShuffleSeeds}
+                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
+                    >
+                      <Shuffle className="w-3.5 h-3.5 text-[var(--text-3)]" />
+                      <span>Shuffle Seeds</span>
+                    </button>
+                    <button
+                      onClick={handleResetToDefaultNames}
+                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-[var(--text-3)]" />
+                      <span>Reset Names</span>
+                    </button>
+                    <button
+                      onClick={handleClearAllFighters}
+                      className="w-full px-3 py-2 text-left text-[#e51b24] hover:bg-red-500/10 flex items-center gap-2"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Clear Fighters</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Minimal Controls */}
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
-          {/* Compact Stepper */}
-          <div className="inline-flex items-center h-9 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-xs font-semibold overflow-hidden">
-            <button
-              type="button"
-              onClick={() => onChangePlayerCount(n - 1)}
-              disabled={n <= 4}
-              className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface2)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Decrease player count"
-            >
-              <Minus className="w-3.5 h-3.5" />
-            </button>
-            <span className="min-w-8 text-center px-1 tabular-nums font-mono text-[var(--text)]">
-              {n}
-            </span>
-            <button
-              type="button"
-              onClick={() => onChangePlayerCount(n + 1)}
-              disabled={n >= 16}
-              className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface2)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Increase player count"
-            >
-              <Plus className="w-3.5 h-3.5" />
-            </button>
-          </div>
+        {/* Players Inputs Grid matching Tekken 7 Screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {state.names.map((_, idx) => {
+            const charId = state.chars[idx];
+            const fighter = charId ? ROSTER_MAP[charId] || null : null;
 
-          {/* Quick Randomize Button */}
-          <button
-            onClick={handleRandomizeAllFighters}
-            className="h-9 px-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-xs font-medium text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface2)] transition-colors inline-flex items-center gap-1.5"
-            title="Randomize fighters for all players"
-          >
-            <Shuffle className="w-3.5 h-3.5 text-[var(--amber)]" />
-            <span className="hidden sm:inline">Randomize</span>
-          </button>
-
-          {/* More Actions Dropdown Toggle */}
-          <div className="relative">
-            <button
-              onClick={() => setShowMoreActions((prev) => !prev)}
-              className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-colors ${
-                showMoreActions
-                  ? 'border-[var(--text-2)] bg-[var(--surface2)] text-[var(--text)]'
-                  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface2)]'
-              }`}
-              title="More actions"
-              aria-label="More actions"
-            >
-              <MoreHorizontal className="w-4 h-4" />
-            </button>
-
-            {showMoreActions && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setShowMoreActions(false)}
-                />
-                <div className="absolute right-0 mt-1.5 w-48 rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-lg py-1 z-50 text-xs">
-                  <button
-                    onClick={handleShuffleSeeds}
-                    className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
-                  >
-                    <Shuffle className="w-3.5 h-3.5 text-[var(--text-3)]" />
-                    <span>Shuffle Seeds</span>
-                  </button>
-                  <button
-                    onClick={handleResetToDefaultNames}
-                    className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5 text-[var(--text-3)]" />
-                    <span>Reset Names (Player 1, 2...)</span>
-                  </button>
-                  <button
-                    onClick={handleClearAllFighters}
-                    className="w-full px-3 py-2 text-left text-[var(--debit)] hover:bg-[var(--debit-bg)] flex items-center gap-2 border-t border-[var(--border)]"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Clear All Fighters</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Competitors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {state.names.map((_, idx) => {
-          const charId = state.chars[idx];
-          const fighter = charId ? ROSTER_MAP[charId] || null : null;
-
-          return (
-            <div
-              key={idx}
-              className="p-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border2)] transition-colors shadow-2xs flex flex-col justify-between gap-2.5"
-            >
-              {/* Row: Seed & Inline Name Input */}
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-md bg-[var(--surface2)] text-[var(--text-3)] flex items-center justify-center font-mono font-bold text-xs select-none">
-                  {idx + 1}
-                </span>
+            return (
+              <div
+                key={idx}
+                className="flex flex-col gap-1.5 p-2 rounded-md bg-[var(--surface2)]/60 border border-[var(--border)] transition-colors"
+              >
+                {/* Name Input */}
                 <input
                   type="text"
                   maxLength={20}
@@ -244,78 +245,85 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                   onChange={(e) => handleNameChange(idx, e.target.value)}
                   onBlur={() => handleNameBlur(idx)}
                   placeholder={`Player ${idx + 1}`}
-                  className="flex-1 min-w-0 px-2 py-1 text-sm font-semibold rounded-md bg-transparent border border-transparent hover:border-[var(--border)] focus:border-[var(--amber)] focus:bg-[var(--surface2)] focus:outline-none transition-all text-[var(--text)]"
+                  className="w-full px-3 py-1.5 text-sm font-semibold rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] focus:border-[#e51b24] focus:outline-none transition-colors"
                 />
-              </div>
 
-              {/* Character Selector Row */}
-              <button
-                type="button"
-                onClick={() => onOpenCharacterPicker(idx)}
-                className="w-full flex items-center justify-between p-2 rounded-lg bg-[var(--surface2)] hover:bg-[var(--surface3)] border border-transparent hover:border-[var(--border)] transition-all text-left group"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <FighterAvatar fighter={fighter} name={localNames[idx] || `Player ${idx + 1}`} size="xs" />
-                  <div className="min-w-0">
-                    <span className="block text-xs font-semibold truncate text-[var(--text)]">
-                      {fighter ? fighter.name : 'Choose Fighter'}
-                    </span>
-                    <span className="block text-[10px] text-[var(--text-3)] truncate">
-                      {fighter ? fighter.style : 'Optional assignment'}
+                {/* Character Picker Trigger Button */}
+                <button
+                  type="button"
+                  onClick={() => onOpenCharacterPicker(idx)}
+                  className="flex items-center justify-between px-2 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface2)] text-left transition-colors border border-[var(--border)]/60"
+                  title="Choose Tekken 7 fighter"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <FighterAvatar
+                      fighter={fighter}
+                      name={localNames[idx] || `Player ${idx + 1}`}
+                      size="xs"
+                    />
+                    <span
+                      className={`text-[11px] font-semibold truncate ${
+                        fighter ? 'text-[var(--text)]' : 'text-[var(--text-3)]'
+                      }`}
+                    >
+                      {fighter ? fighter.name : 'Pick fighter'}
                     </span>
                   </div>
-                </div>
-
-                <div
-                  onClick={(e) => handleRandomizeSingleFighter(idx, e)}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--surface)] text-[var(--text-3)] hover:text-[var(--text)] transition-opacity"
-                  title="Randomize fighter for this player"
-                >
-                  <Shuffle className="w-3.5 h-3.5" />
-                </div>
-              </button>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Minimal Footer Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 text-xs text-[var(--text-3)]">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onExport}
-            className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
-          >
-            <Download className="w-3.5 h-3.5 text-[var(--amber)]" />
-            <span>Export JSON</span>
-          </button>
-          <span aria-hidden="true">·</span>
-          <button
-            type="button"
-            onClick={onOpenImportModal}
-            className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
-          >
-            <Upload className="w-3.5 h-3.5 text-[var(--credit)]" />
-            <span>Import JSON</span>
-          </button>
+                  {fighter && (
+                    <span className="text-[9px] text-[#ffb703] font-mono shrink-0">
+                      {fighter.id.toUpperCase()}
+                    </span>
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
-        <div>
+        {/* Save Names Button matching Tekken 7 Screenshot */}
+        <div className="pt-2 flex items-center justify-between gap-3">
           <button
-            onClick={() => setConfirmResetOpen(true)}
-            className="hover:text-[var(--debit)] transition-colors inline-flex items-center gap-1.5"
+            type="button"
+            onClick={handleSaveNames}
+            className="px-4 py-1.5 rounded-md text-xs font-bold font-sans bg-[var(--surface2)] hover:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border2)] hover:border-[#e51b24] transition-all shadow-xs inline-flex items-center gap-2"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Reset Match Results ({playedCount} recorded)</span>
+            <span>Save names</span>
+            {savedIndicator && <Check className="w-3.5 h-3.5 text-[var(--credit)]" />}
           </button>
+
+          {/* Secondary Actions */}
+          <div className="flex items-center gap-3 text-xs text-[var(--text-3)]">
+            <button
+              onClick={onExport}
+              className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1"
+            >
+              <Download className="w-3.5 h-3.5 text-[#ffb703]" />
+              <span>Export</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenImportModal}
+              className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1"
+            >
+              <Upload className="w-3.5 h-3.5 text-[#22c55e]" />
+              <span>Import</span>
+            </button>
+            <button
+              onClick={() => setConfirmResetOpen(true)}
+              className="hover:text-[#e51b24] transition-colors inline-flex items-center gap-1"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Reset Confirmation Dialog */}
       {confirmResetOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full max-w-sm p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xl space-y-3">
-            <h4 className="text-sm font-bold text-[var(--text)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs">
+          <div className="w-full max-w-sm p-5 rounded-lg bg-[var(--surface)] border border-[var(--border2)] shadow-2xl space-y-3">
+            <h4 className="text-sm font-bold text-[var(--text)] font-display uppercase tracking-wide">
               Reset match results?
             </h4>
             <p className="text-xs text-[var(--text-2)] leading-relaxed">
@@ -324,7 +332,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setConfirmResetOpen(false)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)]"
+                className="px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)]"
               >
                 Cancel
               </button>
@@ -333,7 +341,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                   onResetResults();
                   setConfirmResetOpen(false);
                 }}
-                className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[var(--debit)] text-white hover:opacity-90"
+                className="px-3 py-1.5 text-xs font-bold rounded-md bg-[#e51b24] text-white hover:opacity-90"
               >
                 Reset
               </button>

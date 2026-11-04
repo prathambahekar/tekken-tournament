@@ -1,133 +1,112 @@
 import React from 'react';
-import { BookOpen, Trophy, ShieldCheck, Flame, Scale, GitBranch } from 'lucide-react';
+import { TournamentFormat } from '../types';
+import { Trophy, ShieldCheck, Flame, Scale, GitBranch } from 'lucide-react';
 
 interface RulesTabProps {
   playerCount: number;
+  format?: TournamentFormat;
 }
 
-export const RulesTab: React.FC<RulesTabProps> = ({ playerCount }) => {
-  const totalMatches = playerCount * (playerCount - 1);
-  const totalRounds = 2 * (playerCount + (playerCount % 2) - 1);
+export const RulesTab: React.FC<RulesTabProps> = ({ playerCount, format = 'double' }) => {
+  const isSingle = format === 'single';
+  const totalMatches = isSingle
+    ? (playerCount * (playerCount - 1)) / 2
+    : playerCount * (playerCount - 1);
+  const totalRounds = isSingle
+    ? playerCount + (playerCount % 2) - 1
+    : 2 * (playerCount + (playerCount % 2) - 1);
 
   const rules = [
     {
       title: 'Match Format',
       icon: Flame,
       color: 'text-[var(--debit)]',
-      bg: 'bg-[var(--debit-bg)]',
-      content: (
-        <p className="text-xs text-[var(--text-2)] leading-relaxed">
-          Standard Tekken 7 competitive match format: <span className="font-semibold text-[var(--text)]">First to 2 rounds (Best of 3 rounds)</span> wins the match fixture. Set round time to 60 seconds on standard game settings.
-        </p>
-      ),
+      content: 'First to 2 rounds (Best of 3 rounds) wins the match fixture. 60 seconds round timer on standard Tekken 7 settings.',
     },
     {
-      title: '3-Point System',
+      title: 'Points System',
       icon: Trophy,
       color: 'text-[var(--amber)]',
-      bg: 'bg-[var(--amber-bg)]',
       content: (
-        <div className="space-y-1.5 text-xs text-[var(--text-2)] leading-relaxed">
-          <div className="flex items-center justify-between p-2 rounded-lg bg-[var(--surface2)]">
-            <span className="font-semibold text-[var(--text)]">2–0 Sweep:</span>
-            <span className="font-bold text-[var(--credit)]">+3 Points</span>
+        <div className="space-y-1 text-xs text-[var(--text-2)]">
+          <div className="flex items-center justify-between">
+            <span>2–0 Sweep:</span>
+            <span className="font-bold text-[var(--credit)]">+3 Pts</span>
           </div>
-          <div className="flex items-center justify-between p-2 rounded-lg bg-[var(--surface2)]">
-            <span className="font-semibold text-[var(--text)]">2–1 Close Win:</span>
-            <span className="font-bold text-[var(--amber)]">+2 Points</span>
+          <div className="flex items-center justify-between">
+            <span>2–1 Close Win:</span>
+            <span className="font-bold text-[var(--amber)]">+2 Pts</span>
           </div>
-          <div className="flex items-center justify-between p-2 rounded-lg bg-[var(--surface2)]">
-            <span className="font-semibold text-[var(--text)]">Match Loss:</span>
-            <span className="font-bold text-[var(--text-3)]">0 Points</span>
+          <div className="flex items-center justify-between">
+            <span>Match Loss:</span>
+            <span className="font-medium text-[var(--text-3)]">0 Pts</span>
           </div>
         </div>
       ),
     },
     {
-      title: 'Double Round Robin',
+      title: isSingle ? 'Single Round Robin' : 'Double Round Robin',
       icon: Scale,
       color: 'text-[var(--credit)]',
-      bg: 'bg-[var(--credit-bg)]',
-      content: (
-        <p className="text-xs text-[var(--text-2)] leading-relaxed">
-          With <span className="font-semibold text-[var(--text)]">{playerCount} players</span>, each competitor plays every rival twice across <span className="font-semibold text-[var(--text)]">Leg 1 and Leg 2</span> (totaling {totalMatches} matches over {totalRounds} rounds). {playerCount % 2 !== 0 ? 'Because the player count is odd, one competitor receives a bye rest in each round.' : 'Pairs alternate each round.'}
-        </p>
-      ),
+      content: isSingle
+        ? `Each competitor plays every rival once (${totalMatches} total fixtures across ${totalRounds} rounds).`
+        : `Each competitor plays every rival twice across Leg 1 and Leg 2 (${totalMatches} total fixtures across ${totalRounds} rounds).`,
     },
     {
-      title: 'Tie-Breaking Hierarchy',
+      title: 'Tie-Breakers',
       icon: ShieldCheck,
-      color: 'text-[var(--info)]',
-      bg: 'bg-[var(--surface2)]',
+      color: 'text-[var(--text)]',
       content: (
-        <ol className="list-decimal list-inside space-y-1 text-xs text-[var(--text-2)] leading-relaxed">
-          <li><span className="font-semibold text-[var(--text)]">Total Championship Points</span></li>
-          <li><span className="font-semibold text-[var(--text)]">Total Match Victories (W)</span></li>
-          <li><span className="font-semibold text-[var(--text)]">Round Differential (RF minus RA)</span></li>
-          <li><span className="font-semibold text-[var(--text)]">Initial Tournament Seed / Head-to-Head</span></li>
+        <ol className="list-decimal list-inside space-y-0.5 text-xs text-[var(--text-2)]">
+          <li>Championship Points (PTS)</li>
+          <li>Match Victories (W)</li>
+          <li>Round Difference (RD)</li>
+          <li>Head-to-head record</li>
         </ol>
-      ),
-    },
-    {
-      title: 'Q & DQ Mathematical Status',
-      icon: BookOpen,
-      color: 'text-[var(--text-2)]',
-      bg: 'bg-[var(--surface2)]',
-      content: (
-        <p className="text-xs text-[var(--text-2)] leading-relaxed">
-          The live standings table analyzes remaining fixtures: <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--credit-bg)] text-[var(--credit)]">Q</span> indicates mathematically guaranteed Top 4 qualification. <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[var(--debit-bg)] text-[var(--debit)]">DQ</span> indicates mathematical elimination from Top 4.
-        </p>
       ),
     },
     {
       title: 'Playoff Double-Elimination',
       icon: GitBranch,
       color: 'text-[var(--amber)]',
-      bg: 'bg-[var(--amber-bg)]',
-      content: (
-        <ul className="space-y-1 text-xs text-[var(--text-2)] leading-relaxed">
-          <li><span className="font-semibold text-[var(--text)]">Match 1:</span> 1st Seed vs 2nd Seed</li>
-          <li><span className="font-semibold text-[var(--text)]">Match 2:</span> 3rd Seed vs 4th Seed</li>
-          <li><span className="font-semibold text-[var(--text)]">Winners Match:</span> W1 vs W2 (Winner to Final)</li>
-          <li><span className="font-semibold text-[var(--text)]">Losers Match:</span> L1 vs L2 (Loser out)</li>
-          <li><span className="font-semibold text-[var(--text)]">Second Chance:</span> Losers Match Winner vs Winners Match Loser</li>
-          <li><span className="font-semibold text-[var(--text)]">Grand Final:</span> Winners Finalist vs Second Chance Finalist</li>
-        </ul>
-      ),
+      content: 'Top 4 seeds qualify. Semifinal losers enter the lower bracket for a second chance to reach the Grand Final.',
     },
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xs">
-        <h2 className="text-lg font-bold font-display tracking-tight text-[var(--text)] mb-1">
-          Official Tournament Rules & Scoring Guidelines
-        </h2>
-        <p className="text-xs text-[var(--text-2)] max-w-2xl">
-          Everything you need to run a fair, exciting Tekken 7 home tournament, from round-robin math to double-elimination bracket resolution.
-        </p>
-      </div>
+    <div className="space-y-4 animate-in fade-in duration-150">
+      {/* Tekken 7 Card Container */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-5 shadow-xl space-y-4">
+        <div className="pb-2 border-b border-[var(--border)]/40">
+          <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
+            RULES
+          </h3>
+          <div className="text-xs text-[var(--text-3)] font-mono mt-0.5">
+            Standard rules for {isSingle ? 'single round-robin' : 'double round-robin'} scoring and double-elimination playoffs
+          </div>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {rules.map((rule, idx) => {
           const Icon = rule.icon;
           return (
             <div
               key={idx}
-              className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-xs space-y-3 flex flex-col justify-between"
+              className="p-3.5 rounded-lg bg-[var(--surface)] space-y-2 border border-[var(--border)]"
             >
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-xl ${rule.bg} flex items-center justify-center ${rule.color}`}>
-                  <Icon className="w-4 h-4" />
-                </div>
+              <div className="flex items-center gap-2">
+                <Icon className={`w-4 h-4 ${rule.color}`} />
                 <h3 className="font-display font-bold text-sm text-[var(--text)]">
                   {rule.title}
                 </h3>
               </div>
-              <div className="flex-1">{rule.content}</div>
+              <div className="text-xs text-[var(--text-2)] leading-relaxed">
+                {rule.content}
+              </div>
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

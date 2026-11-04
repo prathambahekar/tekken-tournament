@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { TournamentState, ActiveTab, KnockoutMatchId, MatchResultValue } from './types';
+import { TournamentState, ActiveTab, KnockoutMatchId, MatchResultValue, TournamentFormat } from './types';
 import {
   loadTournamentState,
   saveTournamentState,
@@ -91,8 +91,9 @@ export default function App() {
   }, [state]);
 
   const n = state.names.length;
-  const fixtures = useMemo(() => buildFixtures(n), [n]);
-  const totalRounds = useMemo(() => getTotalRounds(n), [n]);
+  const format: TournamentFormat = state.format === 'single' ? 'single' : 'double';
+  const fixtures = useMemo(() => buildFixtures(n, format), [n, format]);
+  const totalRounds = useMemo(() => getTotalRounds(n, format), [n, format]);
 
   const standings = useMemo(
     () => computeStandings(state.names, state.chars, fixtures, state.res),
@@ -115,13 +116,40 @@ export default function App() {
     const newNames = Array.from({ length: newCount }, (_, i) => state.names[i] || `Player ${i + 1}`);
     const newChars = Array.from({ length: newCount }, (_, i) => state.chars[i] || null);
 
-    setState({
+    setState((prev) => ({
       names: newNames,
       chars: newChars,
+      format: prev.format || 'double',
       res: {},
       ko: { m1: null, m2: null, w: null, l: null, r: null, f: null },
-    });
+    }));
     showToast(`Player count updated to ${newCount}`);
+  };
+
+  // Format change handler (Single vs Double Round-Robin)
+  const handleChangeFormat = (newFormat: TournamentFormat) => {
+    if (newFormat === format) return;
+
+    setState((prev) => {
+      // If switching from double to single, prune leg 2 results
+      const updatedRes: Record<string, MatchResultValue> = {};
+      if (newFormat === 'single') {
+        Object.entries(prev.res).forEach(([key, val]) => {
+          if (!key.endsWith('-2')) {
+            updatedRes[key] = val;
+          }
+        });
+      } else {
+        Object.assign(updatedRes, prev.res);
+      }
+
+      return {
+        ...prev,
+        format: newFormat,
+        res: updatedRes,
+      };
+    });
+    showToast(`Format set to ${newFormat === 'single' ? 'Single' : 'Double'} Round-Robin`);
   };
 
   // Names update
@@ -156,28 +184,7 @@ export default function App() {
     });
   };
 
-  // Quick simulate unplayed matches
-  const handleQuickSimulateRemaining = () => {
-    const unplayed = fixtures.filter((f) => !state.res[f.id]);
-    if (unplayed.length === 0) {
-      showToast('All matches are already completed', 'info');
-      return;
-    }
 
-    const newRes = { ...state.res };
-    const scoreOptions: MatchResultValue[] = ['a20', 'a21', 'b20', 'b21'];
-
-    unplayed.forEach((f) => {
-      const pick = scoreOptions[Math.floor(Math.random() * scoreOptions.length)];
-      newRes[f.id] = pick;
-    });
-
-    setState((prev) => ({
-      ...prev,
-      res: newRes,
-    }));
-    showToast(`Simulated remaining ${unplayed.length} matches!`);
-  };
 
   // Knockout match winner toggle
   const handleSelectKnockoutWinner = (matchId: KnockoutMatchId, playerIndex: number) => {
@@ -239,6 +246,7 @@ export default function App() {
       exported: new Date().toISOString(),
       names: state.names,
       chars: state.chars,
+      format: state.format || 'double',
       res: state.res,
       ko: state.ko,
     };
@@ -272,13 +280,13 @@ export default function App() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors flex flex-col">
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed top-18 right-4 sm:right-8 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs font-semibold shadow-lg text-[var(--text)] animate-in slide-in-from-top-2 duration-150">
+        <div className="fixed top-16 sm:top-18 left-3.5 right-3.5 sm:left-auto sm:right-8 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs font-semibold shadow-lg text-[var(--text)] animate-in slide-in-from-top-2 duration-150">
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-[var(--credit)] shrink-0" />
           ) : (
             <Info className="w-4 h-4 text-[var(--amber)] shrink-0" />
           )}
-          <span>{toast.message}</span>
+          <span className="truncate">{toast.message}</span>
         </div>
       )}
 
@@ -292,13 +300,16 @@ export default function App() {
         completedMatches={completedMatches}
         totalMatches={totalMatches}
         championName={championName}
+        format={format}
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-0 pb-16">
         {activeTab === 'players' && (
           <PlayersTab
             state={state}
+            format={format}
+            onChangeFormat={handleChangeFormat}
             onUpdateNames={handleUpdateNames}
             onUpdateChars={handleUpdateChars}
             onChangePlayerCount={handleChangePlayerCount}
@@ -317,6 +328,7 @@ export default function App() {
             fixtures={fixtures}
             results={state.res}
             playerNames={state.names}
+            format={format}
           />
         )}
 
@@ -327,8 +339,8 @@ export default function App() {
             fixtures={fixtures}
             results={state.res}
             totalRounds={totalRounds}
+            format={format}
             onSetResult={handleSetMatchResult}
-            onQuickSimulateRemaining={handleQuickSimulateRemaining}
           />
         )}
 
@@ -346,18 +358,9 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'rules' && <RulesTab playerCount={n} />}
+        {activeTab === 'rules' && <RulesTab playerCount={n} format={format} />}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[var(--border)] py-6 text-center text-xs text-[var(--text-3)]">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>Tekken 7 Home Tournament Manager · Ready for Couch Play & Local Leagues</span>
-          <div className="flex items-center gap-4">
-            <span className="font-mono">Double Round-Robin & Double Elimination</span>
-          </div>
-        </div>
-      </footer>
 
       {/* Fighter Picker Modal */}
       <CharacterPickerModal

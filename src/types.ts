@@ -38,9 +38,12 @@ export interface StandingsRow {
 
 export type KnockoutMatchId = 'm1' | 'm2' | 'w' | 'l' | 'r' | 'f';
 
+export type TournamentFormat = 'single' | 'double';
+
 export interface TournamentState {
   names: string[];
   chars: (string | null)[];
+  format?: TournamentFormat;
   res: Record<string, MatchResultValue>; // fixtureId -> result
   ko: Record<KnockoutMatchId, number | null>; // matchId -> winner player index
 }

@@ -1,13 +1,13 @@
-import { MatchFixture, MatchResultValue, StandingsRow, TournamentState, KnockoutMatchId } from '../types';
+import { MatchFixture, MatchResultValue, StandingsRow, TournamentState, KnockoutMatchId, TournamentFormat } from '../types';
 import { ROSTER_MAP } from '../data/roster';
 
 export const LOCAL_STORAGE_KEY = 'tekken-home-v1';
 
 /**
  * Generate standard round-robin fixtures using the polygon/circle method.
- * Each pair plays twice (Leg 1 & Leg 2). Odd counts receive a bye slot.
+ * Supports 'single' (1 leg) or 'double' (2 legs). Odd counts receive a bye slot.
  */
-export function buildFixtures(n: number): MatchFixture[] {
+export function buildFixtures(n: number, format: TournamentFormat = 'double'): MatchFixture[] {
   const m = n + (n % 2);
   const arr: number[] = [];
   const out: MatchFixture[] = [];
@@ -17,8 +17,9 @@ export function buildFixtures(n: number): MatchFixture[] {
   }
 
   const roundsPerLeg = m - 1;
+  const maxLeg = format === 'single' ? 1 : 2;
 
-  for (let leg = 1; leg <= 2; leg++) {
+  for (let leg = 1; leg <= maxLeg; leg++) {
     const a = arr.slice();
     for (let r = 0; r < roundsPerLeg; r++) {
       for (let i = 0; i < m / 2; i++) {
@@ -45,8 +46,9 @@ export function buildFixtures(n: number): MatchFixture[] {
   return out;
 }
 
-export function getTotalRounds(n: number): number {
-  return 2 * (n + (n % 2) - 1);
+export function getTotalRounds(n: number, format: TournamentFormat = 'double'): number {
+  const roundsPerLeg = n + (n % 2) - 1;
+  return format === 'single' ? roundsPerLeg : 2 * roundsPerLeg;
 }
 
 /**
@@ -222,24 +224,24 @@ export function computeKnockout(
   return {
     m1: {
       id: 'm1',
-      title: 'Match 1',
-      subtitle: 'Seed 1 vs Seed 2',
+      title: 'Qualifier 1',
+      subtitle: 'Seed 1 vs 2',
       players: m1_p,
       winner: m1_w,
       loser: m1_l,
     },
     m2: {
       id: 'm2',
-      title: 'Match 2',
-      subtitle: 'Seed 3 vs Seed 4',
+      title: 'Qualifier 2',
+      subtitle: 'Seed 3 vs 4',
       players: m2_p,
       winner: m2_w,
       loser: m2_l,
     },
     w: {
       id: 'w',
-      title: 'Winners Match',
-      subtitle: 'Winner to Grand Final',
+      title: 'Winners Final',
+      subtitle: 'To Grand Final',
       players: w_p,
       winner: w_w,
       loser: w_l,
@@ -247,15 +249,15 @@ export function computeKnockout(
     l: {
       id: 'l',
       title: 'Losers Match',
-      subtitle: 'Loser is eliminated',
+      subtitle: 'Elimination',
       players: l_p,
       winner: l_w,
       loser: l_l,
     },
     r: {
       id: 'r',
-      title: 'Second Chance',
-      subtitle: 'Losers Final (Winner to Grand Final)',
+      title: 'Losers Final',
+      subtitle: 'To Grand Final',
       players: r_p,
       winner: r_w,
       loser: r_l,
@@ -263,7 +265,7 @@ export function computeKnockout(
     f: {
       id: 'f',
       title: 'Grand Final',
-      subtitle: 'Championship Decider',
+      subtitle: 'Championship',
       players: f_p,
       winner: f_w,
       loser: f_l,
@@ -289,6 +291,7 @@ export function getDefaultTournament(): TournamentState {
   return {
     names: initialNames,
     chars: initialChars,
+    format: 'double',
     res: {},
     ko: {
       m1: null,
@@ -325,9 +328,12 @@ export function loadTournamentState(): TournamentState {
       ? finalNames.map((_: string, idx: number) => data.chars[idx] || null)
       : finalNames.map(() => null);
 
+    const format: TournamentFormat = data.format === 'single' ? 'single' : 'double';
+
     return {
       names: finalNames,
       chars: finalChars,
+      format,
       res: data.res || {},
       ko: data.ko || {
         m1: null,

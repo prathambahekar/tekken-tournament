@@ -187,16 +187,19 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex flex-col w-full max-w-lg bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="flex flex-col w-full max-w-lg max-h-[88vh] sm:max-h-[82vh] bg-[var(--surface)] border-t sm:border border-[var(--border)] rounded-t-xl sm:rounded-xl shadow-2xl overflow-hidden pb-safe sm:pb-0">
+        {/* Mobile Drag Indicator */}
+        <div className="w-10 h-1 bg-[var(--border2)] rounded-sm mx-auto my-2 sm:hidden shrink-0" />
+
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)] bg-[var(--surface2)]">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-[var(--border)] bg-[var(--surface2)]">
           <div className="flex items-center gap-2">
             <Upload className="w-4 h-4 text-[var(--credit)]" />
             <h3 className="text-base font-bold font-display text-[var(--text)]">
@@ -205,13 +208,14 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface3)]"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface3)]"
+            aria-label="Close"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div className="p-4 sm:p-5 space-y-4 overflow-y-auto">
           {/* Preset Quick Load */}
           <div className="p-3 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between gap-3 text-xs">
             <div>
@@ -308,17 +312,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-5 py-3 border-t border-[var(--border)] bg-[var(--surface2)]">
+        <div className="flex items-center justify-end gap-2.5 px-4 sm:px-5 py-3 border-t border-[var(--border)] bg-[var(--surface2)]">
           <button
             onClick={onClose}
-            className="px-3.5 py-1.5 text-xs font-medium rounded-lg text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface3)] transition-colors"
+            className="px-4 py-2 sm:py-1.5 text-xs font-semibold rounded-xl text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface3)] transition-colors min-h-[40px] sm:min-h-0"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirmImport}
             disabled={!preview}
-            className="px-4 py-1.5 text-xs font-bold rounded-lg bg-[var(--credit)] text-white hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="px-4 py-2 sm:py-1.5 text-xs font-bold rounded-xl bg-[var(--credit)] text-white hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all min-h-[40px] sm:min-h-0"
           >
             Import & Replace Current Data
           </button>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="bg-paul" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.35" />
+      <stop offset="55%" stop-color="#b22222" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#090a0f" stop-opacity="0.98" />
+    </radialGradient>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5b81c" />
+      <stop offset="50%" stop-color="#e8141c" />
+      <stop offset="100%" stop-color="#800000" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="16" fill="url(#bg-paul)" />
+
+  <!-- Speed lines -->
+  <g stroke="rgba(255,255,255,0.06)" stroke-width="2">
+    <line x1="0" y1="20" x2="200" y2="180" />
+    <line x1="0" y1="60" x2="200" y2="220" />
+    <line x1="0" y1="-20" x2="200" y2="140" />
+  </g>
+
+  <!-- Silhouette Icon -->
+  <g transform="translate(0, -6)">
+    <circle cx="100" cy="95" r="42" fill="#ffd700" opacity="0.3" />
+              <path d="M80 85 C80 72 90 65 102 65 C115 65 125 72 125 85 L125 120 C125 135 115 145 100 145 C85 145 75 135 75 120 Z" fill="#ffd700" />
+              <path d="M75 95 L125 95 M75 108 L125 108" stroke="#000" stroke-width="4" opacity="0.5" />
+  </g>
+
+  <!-- Stylized Monogram / Portrait Badge -->
+  <circle cx="100" cy="100" r="48" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-dasharray="8 6" />
+
+  <!-- Fighter Name Header Band -->
+  <rect x="0" y="152" width="200" height="48" fill="#0c0d12" opacity="0.92" />
+  <line x1="0" y1="152" x2="200" y2="152" stroke="url(#metal)" stroke-width="2.5" />
+
+  <!-- Fighter Name Typography -->
+  <text x="100" y="176" text-anchor="middle" font-family="'Chakra Petch', sans-serif" font-weight="700" font-size="16" letter-spacing="1" fill="#ffffff">
+    PAUL
+  </text>
+  <text x="100" y="192" text-anchor="middle" font-family="'Chakra Petch', sans-serif" font-weight="600" font-size="10" letter-spacing="2" fill="#ffd700">
+    BASE FIGHTER
+  </text>
+
+  <!-- Corner Border Accents -->
+  <rect x="2" y="2" width="196" height="196" rx="14" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.4" />
+</svg>

@@ -16,6 +16,7 @@ import { KnockoutTab } from './components/KnockoutTab';
 import { RulesTab } from './components/RulesTab';
 import { CharacterPickerModal } from './components/CharacterPickerModal';
 import { ImportModal } from './components/ImportModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { CheckCircle2, Info } from 'lucide-react';
 
 export default function App() {
@@ -304,7 +305,7 @@ export default function App() {
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-0 pb-16">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 pt-1 sm:pt-0 pb-24 md:pb-16">
         {activeTab === 'players' && (
           <PlayersTab
             state={state}
@@ -361,6 +362,14 @@ export default function App() {
         {activeTab === 'rules' && <RulesTab playerCount={n} format={format} />}
       </main>
 
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        completedMatches={completedMatches}
+        totalMatches={totalMatches}
+        hasChampion={!!championName}
+      />
 
       {/* Fighter Picker Modal */}
       <CharacterPickerModal

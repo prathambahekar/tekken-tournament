@@ -97,16 +97,16 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                 }
               }}
               placeholder="Search fighter (e.g. Jin, Kazuya, Eddy)..."
-              className="w-full pl-9 pr-8 py-2 text-sm bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-[var(--text-3)] focus:outline-none focus:ring-1 focus:ring-[var(--amber)] transition-colors"
+              className="w-full pl-9 pr-8 py-2.5 sm:py-2 text-base sm:text-sm bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-[var(--text-3)] focus:outline-none focus:ring-1 focus:ring-[var(--amber)] transition-colors"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[var(--text-3)] hover:text-[var(--text)]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-[var(--text-3)] hover:text-[var(--text)]"
                 aria-label="Clear search"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -122,7 +122,7 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                 onSelect(null);
                 onClose();
               }}
-              className={`flex items-center gap-2.5 p-2 rounded-xl border text-left transition-all min-h-[44px] active:scale-95 ${
+              className={`flex items-center gap-2.5 p-2 rounded-xl border text-left transition-all min-h-[48px] active:scale-95 ${
                 currentFighterId === null
                   ? 'border-[var(--amber)] bg-[var(--surface2)] ring-1 ring-[var(--amber)]'
                   : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface2)]'
@@ -147,16 +147,21 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                   onSelect(f.id);
                   onClose();
                 }}
-                className={`flex items-center gap-2.5 p-2 rounded-xl border text-left transition-all min-h-[44px] active:scale-95 ${
+                className={`flex items-center gap-2.5 p-2 rounded-xl border text-left transition-all min-h-[48px] active:scale-95 ${
                   isSelected
                     ? 'border-[var(--amber)] bg-[var(--surface2)] ring-1 ring-[var(--amber)] font-semibold'
                     : 'border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface2)] hover:border-[var(--border2)]'
                 }`}
               >
                 <FighterAvatar fighter={f} size="sm" />
-                <span className="text-xs font-semibold truncate text-[var(--text)]">
-                  {f.name}
-                </span>
+                <div className="min-w-0">
+                  <span className="text-xs font-semibold truncate text-[var(--text)] block leading-tight">
+                    {f.name}
+                  </span>
+                  <span className="text-[10px] text-[var(--text-3)] truncate block leading-tight">
+                    {f.style}
+                  </span>
+                </div>
               </button>
             );
           })}

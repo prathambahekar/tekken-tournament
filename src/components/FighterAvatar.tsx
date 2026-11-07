@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Fighter } from '../types';
 
 interface FighterAvatarProps {
@@ -9,11 +9,11 @@ interface FighterAvatarProps {
 }
 
 const sizeMap = {
-  xs: 'w-5 h-5 text-[9px]',
-  sm: 'w-7 h-7 text-xs',
-  md: 'w-8 h-8 text-xs',
-  lg: 'w-10 h-10 text-sm',
-  xl: 'w-12 h-12 text-base',
+  xs: 'w-6 h-6 text-[9px] rounded',
+  sm: 'w-8 h-8 text-xs rounded-md',
+  md: 'w-9 h-9 text-xs rounded-md',
+  lg: 'w-11 h-11 text-sm rounded-lg',
+  xl: 'w-14 h-14 text-base rounded-lg',
 };
 
 function getInitials(name: string): string {
@@ -38,6 +38,7 @@ export const FighterAvatar: React.FC<FighterAvatarProps> = ({
   size = 'sm',
   className = '',
 }) => {
+  const [imgError, setImgError] = useState(false);
   const displayText = fighter ? fighter.initials : name ? getInitials(name) : '?';
   const hue = fighter ? fighter.hue : name ? computeHue(name) : 220;
 
@@ -47,13 +48,25 @@ export const FighterAvatar: React.FC<FighterAvatarProps> = ({
     color: '#ffffff',
   };
 
+  const portraitSrc = fighter ? `/portraits/${fighter.id}.svg` : null;
+
   return (
     <div
-      className={`relative inline-flex items-center justify-center font-bold shrink-0 rounded-full border shadow-xs select-none tracking-tight ${sizeMap[size]} ${className}`}
+      className={`relative inline-flex items-center justify-center font-bold shrink-0 overflow-hidden border shadow-xs select-none tracking-tight ${sizeMap[size]} ${className}`}
       style={bgStyle}
       title={fighter ? `${fighter.name} (${fighter.style})` : name || 'Player'}
     >
-      <span className="leading-none uppercase">{displayText}</span>
+      {portraitSrc && !imgError ? (
+        <img
+          src={portraitSrc}
+          alt={fighter?.name || 'Fighter'}
+          className="w-full h-full object-cover"
+          loading="lazy"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <span className="leading-none uppercase">{displayText}</span>
+      )}
     </div>
   );
 };

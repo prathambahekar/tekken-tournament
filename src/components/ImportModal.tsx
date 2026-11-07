@@ -274,7 +274,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               }}
               rows={4}
               placeholder='Paste tournament JSON string here...'
-              className="w-full p-2.5 text-xs font-mono bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:border-[var(--amber)] transition-colors resize-none"
+              className="w-full p-2.5 text-sm sm:text-xs font-mono bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:border-[var(--amber)] transition-colors resize-none"
             />
           </div>
 

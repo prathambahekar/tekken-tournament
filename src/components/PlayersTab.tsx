@@ -106,14 +106,16 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
       {/* Main Tekken 7 Card with Red Top Border */}
       <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-6 shadow-xl space-y-5">
         {/* Card Header: Gold Italic Title + Options */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-[var(--border)]/40">
-          <div className="flex items-center gap-3">
-            <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
-              PLAYERS
-            </h3>
-            <span className="text-xs text-[var(--text-3)] font-mono">
-              ({n} fighters)
-            </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--border)]/40">
+          <div className="flex items-center justify-between sm:justify-start gap-3">
+            <div className="flex items-center gap-2">
+              <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
+                PLAYERS
+              </h3>
+              <span className="text-xs text-[var(--text-3)] font-mono">
+                ({n} fighters)
+              </span>
+            </div>
             {savedIndicator && (
               <span className="flex items-center gap-1 text-xs text-[var(--credit)] font-bold animate-in fade-in">
                 <Check className="w-3.5 h-3.5" /> Saved
@@ -121,58 +123,58 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             )}
           </div>
 
-          {/* Quick Controls: Format & Stepper */}
-          <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-end">
+          {/* Quick Controls: Format & Stepper with touch-friendly sizes */}
+          <div className="flex flex-wrap items-center gap-2 justify-between sm:justify-end">
             {/* Format Toggle: Single vs Double Round Robin */}
-            <div className="inline-flex items-center p-0.5 rounded-md bg-[var(--surface2)] text-xs font-semibold border border-[var(--border)]">
+            <div className="inline-flex items-center p-0.5 rounded-lg bg-[var(--surface2)] text-xs font-semibold border border-[var(--border)]">
               <button
                 type="button"
                 onClick={() => onChangeFormat('single')}
-                className={`px-2.5 py-1 rounded transition-all ${
+                className={`min-h-[36px] sm:min-h-0 px-3 py-1.5 rounded-md transition-all ${
                   format === 'single'
                     ? 'bg-[#e51b24] text-white font-bold shadow-xs'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
                 title="Single Round-Robin"
               >
-                Single Round
+                Single RR
               </button>
               <button
                 type="button"
                 onClick={() => onChangeFormat('double')}
-                className={`px-2.5 py-1 rounded transition-all ${
+                className={`min-h-[36px] sm:min-h-0 px-3 py-1.5 rounded-md transition-all ${
                   format === 'double'
                     ? 'bg-[#e51b24] text-white font-bold shadow-xs'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
                 title="Double Round-Robin"
               >
-                Double Round
+                Double RR
               </button>
             </div>
 
-            {/* Stepper */}
-            <div className="inline-flex items-center h-8 rounded-md bg-[var(--surface2)] text-xs font-semibold overflow-hidden border border-[var(--border)]">
+            {/* Stepper with touch-friendly hitboxes */}
+            <div className="inline-flex items-center h-10 sm:h-8 rounded-lg bg-[var(--surface2)] text-xs font-semibold overflow-hidden border border-[var(--border)]">
               <button
                 type="button"
                 onClick={() => onChangePlayerCount(n - 1)}
                 disabled={n <= 4}
-                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="w-10 sm:w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 aria-label="Decrease player count"
               >
-                <Minus className="w-3 h-3" />
+                <Minus className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
               </button>
-              <span className="min-w-7 text-center px-1 tabular-nums font-mono text-xs text-[var(--text)] font-bold">
+              <span className="min-w-8 text-center px-1 tabular-nums font-mono text-xs text-[var(--text)] font-bold">
                 {n}
               </span>
               <button
                 type="button"
                 onClick={() => onChangePlayerCount(n + 1)}
                 disabled={n >= 16}
-                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="w-10 sm:w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 aria-label="Increase player count"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
               </button>
             </div>
 
@@ -180,7 +182,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             <div className="relative">
               <button
                 onClick={() => setShowMoreActions((prev) => !prev)}
-                className={`h-8 w-8 rounded-md flex items-center justify-center transition-all border border-[var(--border)] ${
+                className={`h-10 w-10 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center transition-all border border-[var(--border)] active:scale-95 ${
                   showMoreActions
                     ? 'bg-[var(--surface2)] text-[var(--text)]'
                     : 'bg-[var(--surface2)] text-[var(--text-2)] hover:text-[var(--text)]'
@@ -197,27 +199,27 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowMoreActions(false)}
                   />
-                  <div className="absolute right-0 mt-1.5 w-48 rounded-md bg-[var(--surface)] shadow-2xl py-1 z-50 text-xs border border-[var(--border2)]">
+                  <div className="absolute right-0 mt-1.5 w-52 rounded-xl bg-[var(--surface)] shadow-2xl py-1 z-50 text-xs border border-[var(--border2)]">
                     <button
                       onClick={handleShuffleSeeds}
-                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
+                      className="w-full px-3.5 py-2.5 text-left text-[var(--text)] hover:bg-[var(--surface2)] active:bg-[var(--surface2)] flex items-center gap-2.5"
                     >
-                      <Shuffle className="w-3.5 h-3.5 text-[var(--text-3)]" />
+                      <Shuffle className="w-4 h-4 text-[var(--text-3)]" />
                       <span>Shuffle Seeds</span>
                     </button>
                     <button
                       onClick={handleResetToDefaultNames}
-                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
+                      className="w-full px-3.5 py-2.5 text-left text-[var(--text)] hover:bg-[var(--surface2)] active:bg-[var(--surface2)] flex items-center gap-2.5"
                     >
-                      <RotateCcw className="w-3.5 h-3.5 text-[var(--text-3)]" />
-                      <span>Reset Names</span>
+                      <RotateCcw className="w-4 h-4 text-[var(--text-3)]" />
+                      <span>Reset Names to Default</span>
                     </button>
                     <button
                       onClick={handleClearAllFighters}
-                      className="w-full px-3 py-2 text-left text-[#e51b24] hover:bg-red-500/10 flex items-center gap-2"
+                      className="w-full px-3.5 py-2.5 text-left text-[#e51b24] hover:bg-red-500/10 active:bg-red-500/15 flex items-center gap-2.5"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Clear Fighters</span>
+                      <Trash2 className="w-4 h-4" />
+                      <span>Clear All Fighters</span>
                     </button>
                   </div>
                 </>
@@ -235,44 +237,58 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             return (
               <div
                 key={idx}
-                className="flex flex-col gap-1.5 p-2 rounded-md bg-[var(--surface2)]/60 border border-[var(--border)] transition-colors"
+                className="flex flex-col gap-2 p-2.5 sm:p-2 rounded-lg bg-[var(--surface2)]/60 border border-[var(--border)] transition-colors shadow-2xs"
               >
-                {/* Name Input */}
-                <input
-                  type="text"
-                  maxLength={20}
-                  value={localNames[idx] ?? `Player ${idx + 1}`}
-                  onChange={(e) => handleNameChange(idx, e.target.value)}
-                  onBlur={() => handleNameBlur(idx)}
-                  placeholder={`Player ${idx + 1}`}
-                  className="w-full px-3 py-1.5 text-sm font-semibold rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] focus:border-[#e51b24] focus:outline-none transition-colors"
-                />
+                {/* Name Input with 16px font-size to prevent mobile browser auto-zoom */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    maxLength={20}
+                    value={localNames[idx] ?? `Player ${idx + 1}`}
+                    onChange={(e) => handleNameChange(idx, e.target.value)}
+                    onBlur={() => handleNameBlur(idx)}
+                    placeholder={`Player ${idx + 1}`}
+                    className="w-full px-3 py-2 sm:py-1.5 text-base sm:text-sm font-semibold rounded-md bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] focus:border-[#e51b24] focus:outline-none transition-colors"
+                  />
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 font-mono text-[10px] text-[var(--text-3)] pointer-events-none">
+                    #{idx + 1}
+                  </span>
+                </div>
 
-                {/* Character Picker Trigger Button */}
+                {/* Character Picker Trigger Button - 44px touch target on mobile */}
                 <button
                   type="button"
                   onClick={() => onOpenCharacterPicker(idx)}
-                  className="flex items-center justify-between px-2 py-1 rounded bg-[var(--surface)] hover:bg-[var(--surface2)] text-left transition-colors border border-[var(--border)]/60"
+                  className="flex items-center justify-between px-2.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-md bg-[var(--surface)] hover:bg-[var(--surface2)] active:scale-[0.99] text-left transition-all border border-[var(--border)]/70 shadow-2xs"
                   title="Choose Tekken 7 fighter"
                 >
-                  <div className="flex items-center gap-1.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <FighterAvatar
                       fighter={fighter}
                       name={localNames[idx] || `Player ${idx + 1}`}
                       size="xs"
                     />
-                    <span
-                      className={`text-[11px] font-semibold truncate ${
-                        fighter ? 'text-[var(--text)]' : 'text-[var(--text-3)]'
-                      }`}
-                    >
-                      {fighter ? fighter.name : 'Pick fighter'}
-                    </span>
+                    <div className="min-w-0">
+                      <span
+                        className={`text-xs sm:text-[11px] font-semibold truncate block ${
+                          fighter ? 'text-[var(--text)]' : 'text-[var(--text-3)]'
+                        }`}
+                      >
+                        {fighter ? fighter.name : 'Choose Fighter'}
+                      </span>
+                      {fighter && (
+                        <span className="text-[10px] text-[var(--text-3)] truncate block leading-tight">
+                          {fighter.style}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  {fighter && (
-                    <span className="text-[9px] text-[#ffb703] font-mono shrink-0">
+                  {fighter ? (
+                    <span className="text-[9px] text-[#ffb703] font-mono shrink-0 font-bold ml-1">
                       {fighter.id.toUpperCase()}
                     </span>
+                  ) : (
+                    <span className="text-xs text-[var(--text-3)] shrink-0">+</span>
                   )}
                 </button>
               </div>
@@ -280,39 +296,39 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
           })}
         </div>
 
-        {/* Save Names Button matching Tekken 7 Screenshot */}
-        <div className="pt-2 flex items-center justify-between gap-3">
+        {/* Save Names & Secondary Actions */}
+        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <button
             type="button"
             onClick={handleSaveNames}
-            className="px-4 py-1.5 rounded-md text-xs font-bold font-sans bg-[var(--surface2)] hover:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border2)] hover:border-[#e51b24] transition-all shadow-xs inline-flex items-center gap-2"
+            className="w-full sm:w-auto min-h-[44px] sm:min-h-0 px-5 py-2 rounded-lg sm:rounded-md text-xs font-bold font-sans bg-[var(--surface2)] hover:bg-[var(--surface3)] active:scale-[0.99] text-[var(--text)] border border-[var(--border2)] hover:border-[#e51b24] transition-all shadow-xs inline-flex items-center justify-center gap-2"
           >
             <span>Save names</span>
             {savedIndicator && <Check className="w-3.5 h-3.5 text-[var(--credit)]" />}
           </button>
 
           {/* Secondary Actions */}
-          <div className="flex items-center gap-3 text-xs text-[var(--text-3)]">
+          <div className="flex items-center justify-around sm:justify-end gap-2 sm:gap-4 text-xs text-[var(--text-3)] pt-1 sm:pt-0 border-t sm:border-t-0 border-[var(--border)]/40">
             <button
               onClick={onExport}
-              className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1"
+              className="min-h-[40px] px-2.5 hover:text-[var(--text)] active:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
-              <Download className="w-3.5 h-3.5 text-[#ffb703]" />
+              <Download className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#ffb703]" />
               <span>Export</span>
             </button>
             <button
               type="button"
               onClick={onOpenImportModal}
-              className="hover:text-[var(--text)] transition-colors inline-flex items-center gap-1"
+              className="min-h-[40px] px-2.5 hover:text-[var(--text)] active:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
-              <Upload className="w-3.5 h-3.5 text-[#22c55e]" />
+              <Upload className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#22c55e]" />
               <span>Import</span>
             </button>
             <button
               onClick={() => setConfirmResetOpen(true)}
-              className="hover:text-[#e51b24] transition-colors inline-flex items-center gap-1"
+              className="min-h-[40px] px-2.5 hover:text-[#e51b24] active:text-[#e51b24] transition-colors inline-flex items-center gap-1.5"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
               <span>Reset</span>
             </button>
           </div>

@@ -18,6 +18,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
   format = 'double',
 }) => {
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [mobileLeaderboardMode, setMobileLeaderboardMode] = useState<'cards' | 'table'>('cards');
   const [mobileGridMode, setMobileGridMode] = useState<'cards' | 'compact' | 'full'>('cards');
   const [selectedPlayerIdx, setSelectedPlayerIdx] = useState<number>(() => {
     return standings[0]?.i ?? 0;
@@ -104,119 +105,272 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
           </div>
         </div>
 
-        {/* VIEW 1: Leaderboard Table (With Clean Solid Grid Lines) */}
+        {/* VIEW 1: Leaderboard Table & Mobile Cards */}
         {viewMode === 'table' && (
-          <div className="rounded border border-[var(--border)] bg-[var(--surface2)]/40 overflow-hidden shadow-2xs">
-          <div className="overflow-x-auto no-scrollbar">
-            <table className="w-full text-left text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-xs text-[var(--text-3)] font-semibold select-none">
-                  <th className="py-2.5 px-3 text-center w-12 border-r border-[var(--border)]">#</th>
-                  <th className="py-2.5 px-3 border-r border-[var(--border)]">Player</th>
-                  <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Played">P</th>
-                  <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Wins">W</th>
-                  <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Losses">L</th>
-                  <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Round Differential">Diff</th>
-                  <th className="py-2.5 px-4 text-right font-bold text-[var(--text)]">Pts</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--border)]">
+          <div className="space-y-3">
+            {/* Mobile Format Switcher for Leaderboard */}
+            <div className="sm:hidden flex items-center justify-between p-1 bg-[var(--surface2)] rounded-lg border border-[var(--border)] text-xs">
+              <span className="text-[11px] font-semibold text-[var(--text-3)] pl-2">
+                Mobile View:
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setMobileLeaderboardMode('cards')}
+                  className={`min-h-[34px] px-3 py-1 rounded-md font-semibold transition-all ${
+                    mobileLeaderboardMode === 'cards'
+                      ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs border border-[var(--border)]'
+                      : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  Cards
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileLeaderboardMode('table')}
+                  className={`min-h-[34px] px-3 py-1 rounded-md font-semibold transition-all ${
+                    mobileLeaderboardMode === 'table'
+                      ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs border border-[var(--border)]'
+                      : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  Full Table
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Mode: Leaderboard Cards */}
+            {mobileLeaderboardMode === 'cards' && (
+              <div className="sm:hidden space-y-2.5">
                 {standings.map((row, index) => {
-                  const isCutoff = index === 3;
                   const isTop4 = index < 4;
                   const isLeader = index === 0 && row.p > 0;
+                  const isCutoff = index === 3;
 
                   return (
                     <React.Fragment key={row.i}>
-                      <tr
-                        className={`transition-colors hover:bg-[var(--surface2)]/60 ${
-                          isTop4 ? 'bg-[var(--amber-bg)]/10' : ''
+                      <div
+                        className={`p-3 rounded-lg bg-[var(--surface)] border transition-all shadow-2xs ${
+                          isLeader
+                            ? 'border-[var(--amber)] ring-1 ring-[var(--amber)]/40'
+                            : isTop4
+                            ? 'border-[var(--border2)] bg-[var(--surface)]'
+                            : 'border-[var(--border)] opacity-85'
                         }`}
                       >
-                        {/* Rank */}
-                        <td className="py-2.5 px-3 text-center font-mono font-bold text-xs border-r border-[var(--border)]">
-                          {row.status === 'Q' ? (
-                            <span className="text-[var(--credit)] font-bold" title="Qualified">Q</span>
-                          ) : row.status === 'DQ' ? (
-                            <span className="text-[var(--text-3)] opacity-60" title="Eliminated">DQ</span>
-                          ) : (
-                            <span className={isLeader ? 'text-[var(--amber)]' : 'text-[var(--text-3)]'}>
-                              {index + 1}
-                            </span>
-                          )}
-                        </td>
+                        {/* Top: Rank + Avatar + Name + PTS */}
+                        <div className="flex items-center justify-between gap-2.5 pb-2 border-b border-[var(--border)]/60">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            {/* Rank Badge */}
+                            <div
+                              className={`w-7 h-7 rounded-md flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
+                                index === 0
+                                  ? 'bg-amber-400/20 text-[var(--amber)] border border-amber-400/40'
+                                  : index === 1
+                                  ? 'bg-zinc-300/20 text-zinc-300 border border-zinc-400/30'
+                                  : index === 2
+                                  ? 'bg-amber-700/20 text-amber-600 border border-amber-700/30'
+                                  : isTop4
+                                  ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
+                                  : 'bg-[var(--surface2)] text-[var(--text-3)] border border-[var(--border)]'
+                              }`}
+                            >
+                              {row.status === 'Q' ? 'Q' : `#${index + 1}`}
+                            </div>
 
-                        {/* Player & Character */}
-                        <td className="py-2.5 px-3 border-r border-[var(--border)]">
-                          <div className="flex items-center gap-2.5">
-                            <FighterAvatar fighter={row.fighter} name={row.name} size="xs" />
-                            <div className="min-w-0">
-                              <span className="font-semibold text-sm text-[var(--text)] truncate block">
-                                {row.name}
-                              </span>
+                            <FighterAvatar fighter={row.fighter} name={row.name} size="sm" />
+
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold text-sm text-[var(--text)] truncate">
+                                  {row.name}
+                                </span>
+                                {isTop4 && (
+                                  <span className="text-[9px] font-mono font-bold uppercase px-1 rounded bg-[var(--credit-bg)] text-[var(--credit)] shrink-0">
+                                    Top 4
+                                  </span>
+                                )}
+                              </div>
                               {row.fighter && (
                                 <span className="text-[11px] text-[var(--text-3)] truncate block leading-tight">
-                                  {row.fighter.name}
+                                  {row.fighter.name} · {row.fighter.style}
                                 </span>
                               )}
                             </div>
                           </div>
-                        </td>
 
-                        {/* Stats */}
-                        <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-2)] font-mono border-r border-[var(--border)]">
-                          {row.p}
-                        </td>
-                        <td className="py-2.5 px-2 text-center tabular-nums text-xs font-semibold text-[var(--credit)] font-mono border-r border-[var(--border)]">
-                          {row.w}
-                        </td>
-                        <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-3)] font-mono border-r border-[var(--border)]">
-                          {row.l}
-                        </td>
-                        <td className="py-2.5 px-2 text-center tabular-nums text-xs font-mono border-r border-[var(--border)]">
-                          <span
-                            className={
-                              row.diff > 0
-                                ? 'text-[var(--credit)] font-semibold'
-                                : row.diff < 0
-                                ? 'text-[var(--debit)]'
-                                : 'text-[var(--text-3)]'
-                            }
-                          >
-                            {row.diff > 0 ? `+${row.diff}` : row.diff}
-                          </span>
-                        </td>
+                          {/* Points Display */}
+                          <div className="text-right shrink-0">
+                            <span className="font-display font-black text-base text-[var(--amber)] italic block leading-none">
+                              {row.pts} <span className="text-xs font-mono font-normal not-italic text-[var(--text-3)]">PTS</span>
+                            </span>
+                          </div>
+                        </div>
 
-                        {/* Points */}
-                        <td className="py-2.5 px-4 text-right font-display font-extrabold text-sm tabular-nums text-[var(--amber)]">
-                          {row.pts}
-                        </td>
-                      </tr>
+                        {/* Bottom: Match Metrics Grid */}
+                        <div className="grid grid-cols-4 gap-1.5 pt-2 text-center text-xs">
+                          <div className="p-1 rounded bg-[var(--surface2)]/70">
+                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Played</span>
+                            <span className="font-mono font-bold text-[var(--text)]">{row.p}</span>
+                          </div>
+                          <div className="p-1 rounded bg-[var(--surface2)]/70">
+                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Won</span>
+                            <span className="font-mono font-bold text-[var(--credit)]">{row.w}</span>
+                          </div>
+                          <div className="p-1 rounded bg-[var(--surface2)]/70">
+                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Lost</span>
+                            <span className="font-mono font-bold text-[var(--text-3)]">{row.l}</span>
+                          </div>
+                          <div className="p-1 rounded bg-[var(--surface2)]/70">
+                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Diff</span>
+                            <span
+                              className={`font-mono font-bold ${
+                                row.diff > 0
+                                  ? 'text-[var(--credit)]'
+                                  : row.diff < 0
+                                  ? 'text-[var(--debit)]'
+                                  : 'text-[var(--text-3)]'
+                              }`}
+                            >
+                              {row.diff > 0 ? `+${row.diff}` : row.diff}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
 
-                      {/* Playoff cutoff banner with solid border lines */}
+                      {/* Playoff Cutoff Indicator on Mobile */}
                       {isCutoff && standings.length > 4 && (
-                        <tr className="border-y-2 border-[var(--amber)]/40">
-                          <td colSpan={7} className="p-0">
-                            <div className="px-4 py-1.5 bg-[var(--surface2)] text-[10px] text-[var(--amber)] font-bold uppercase tracking-wider text-center">
-                              Top 4 Advance to Playoffs
-                            </div>
-                          </td>
-                        </tr>
+                        <div className="py-1 px-3 rounded-md bg-[var(--amber-bg)]/30 border border-[var(--amber-border)] text-center text-[10px] font-bold uppercase tracking-wider text-[var(--amber)]">
+                          ▲ Top 4 Advance to Playoffs ▲
+                        </div>
                       )}
                     </React.Fragment>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
 
-          {/* Table Footer */}
-          <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] text-[var(--text-3)] flex items-center justify-between">
-            <span>Top 4 qualify for double-elimination playoffs</span>
-            <span>Win 2–0 = 3 pts · Win 2–1 = 2 pts · Loss = 0 pts</span>
+                <div className="p-3 rounded-lg bg-[var(--surface2)] border border-[var(--border)] text-[11px] text-[var(--text-3)] space-y-1">
+                  <div className="flex justify-between">
+                    <span>2–0 win: <strong className="text-[var(--credit)]">+3 pts</strong></span>
+                    <span>2–1 win: <strong className="text-[var(--amber)]">+2 pts</strong></span>
+                    <span>Loss: <strong className="text-[var(--text-3)]">0 pts</strong></span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Desktop Table View & Mobile Full Table View */}
+            <div className={`${mobileLeaderboardMode === 'table' ? 'block' : 'hidden sm:block'} rounded-lg border border-[var(--border)] bg-[var(--surface2)]/40 overflow-hidden shadow-2xs`}>
+              <div className="overflow-x-auto no-scrollbar">
+                <table className="w-full text-left text-sm border-collapse min-w-[340px]">
+                  <thead>
+                    <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-xs text-[var(--text-3)] font-semibold select-none">
+                      <th className="py-2.5 px-3 text-center w-12 border-r border-[var(--border)]">#</th>
+                      <th className="py-2.5 px-3 border-r border-[var(--border)]">Player</th>
+                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Played">P</th>
+                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Wins">W</th>
+                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Losses">L</th>
+                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Round Differential">Diff</th>
+                      <th className="py-2.5 px-4 text-right font-bold text-[var(--text)]">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--border)]">
+                    {standings.map((row, index) => {
+                      const isCutoff = index === 3;
+                      const isTop4 = index < 4;
+                      const isLeader = index === 0 && row.p > 0;
+
+                      return (
+                        <React.Fragment key={row.i}>
+                          <tr
+                            className={`transition-colors hover:bg-[var(--surface2)]/60 ${
+                              isTop4 ? 'bg-[var(--amber-bg)]/10' : ''
+                            }`}
+                          >
+                            {/* Rank */}
+                            <td className="py-2.5 px-3 text-center font-mono font-bold text-xs border-r border-[var(--border)]">
+                              {row.status === 'Q' ? (
+                                <span className="text-[var(--credit)] font-bold" title="Qualified">Q</span>
+                              ) : row.status === 'DQ' ? (
+                                <span className="text-[var(--text-3)] opacity-60" title="Eliminated">DQ</span>
+                              ) : (
+                                <span className={isLeader ? 'text-[var(--amber)]' : 'text-[var(--text-3)]'}>
+                                  {index + 1}
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Player & Character */}
+                            <td className="py-2.5 px-3 border-r border-[var(--border)]">
+                              <div className="flex items-center gap-2.5">
+                                <FighterAvatar fighter={row.fighter} name={row.name} size="xs" />
+                                <div className="min-w-0">
+                                  <span className="font-semibold text-sm text-[var(--text)] truncate block">
+                                    {row.name}
+                                  </span>
+                                  {row.fighter && (
+                                    <span className="text-[11px] text-[var(--text-3)] truncate block leading-tight">
+                                      {row.fighter.name}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Stats */}
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-2)] font-mono border-r border-[var(--border)]">
+                              {row.p}
+                            </td>
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs font-semibold text-[var(--credit)] font-mono border-r border-[var(--border)]">
+                              {row.w}
+                            </td>
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-3)] font-mono border-r border-[var(--border)]">
+                              {row.l}
+                            </td>
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs font-mono border-r border-[var(--border)]">
+                              <span
+                                className={
+                                  row.diff > 0
+                                    ? 'text-[var(--credit)] font-semibold'
+                                    : row.diff < 0
+                                    ? 'text-[var(--debit)]'
+                                    : 'text-[var(--text-3)]'
+                                }
+                              >
+                                {row.diff > 0 ? `+${row.diff}` : row.diff}
+                              </span>
+                            </td>
+
+                            {/* Points */}
+                            <td className="py-2.5 px-4 text-right font-display font-extrabold text-sm tabular-nums text-[var(--amber)]">
+                              {row.pts}
+                            </td>
+                          </tr>
+
+                          {/* Playoff cutoff banner */}
+                          {isCutoff && standings.length > 4 && (
+                            <tr className="border-y-2 border-[var(--amber)]/40">
+                              <td colSpan={7} className="p-0">
+                                <div className="px-4 py-1.5 bg-[var(--surface2)] text-[10px] text-[var(--amber)] font-bold uppercase tracking-wider text-center">
+                                  Top 4 Advance to Playoffs
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Table Footer */}
+              <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] text-[var(--text-3)] flex items-center justify-between">
+                <span>Top 4 qualify for double-elimination playoffs</span>
+                <span>Win 2–0 = 3 pts · Win 2–1 = 2 pts · Loss = 0 pts</span>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* VIEW 2: Cross Grid with Mobile Zero-Scroll Options & Solid Table Lines */}
       {viewMode === 'grid' && (

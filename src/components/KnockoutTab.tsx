@@ -31,7 +31,12 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
   onSelectWinner,
   onResetKnockout,
 }) => {
-  const [viewMode, setViewMode] = useState<'flowchart' | 'cards'>('flowchart');
+  const [viewMode, setViewMode] = useState<'flowchart' | 'cards'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return 'cards';
+    }
+    return 'flowchart';
+  });
   const [copied, setCopied] = useState(false);
 
   const ko = computeKnockout(standings, koResults);
@@ -159,8 +164,8 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
 
     if (!details) {
       return (
-        <div className={`flex items-center justify-between px-2.5 py-1.5 rounded-md bg-[var(--surface2)] text-xs text-[var(--text-3)] select-none ${compact ? 'h-[36px]' : 'min-h-[42px]'}`}>
-          <span className="italic">TBD</span>
+        <div className={`flex items-center justify-between px-2.5 py-1.5 rounded-md bg-[var(--surface2)] text-xs text-[var(--text-3)] select-none ${compact ? 'h-[36px]' : 'min-h-[48px]'}`}>
+          <span className="italic">TBD (Pending fixture)</span>
           <span className="text-[9px] uppercase font-mono">Slot {slotIndex + 1}</span>
         </div>
       );
@@ -171,16 +176,16 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
         type="button"
         disabled={!isClickable}
         onClick={() => onSelectWinner(matchId, details.index)}
-        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-all active:scale-[0.99] ${compact ? 'h-[36px]' : 'min-h-[42px]'} ${
+        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all active:scale-[0.99] ${compact ? 'h-[36px]' : 'min-h-[48px]'} ${
           isWinner
-            ? 'bg-[var(--credit-bg)] text-[var(--text)] font-bold ring-1 ring-[var(--credit)]'
+            ? 'bg-[var(--credit-bg)] text-[var(--text)] font-bold ring-2 ring-[var(--credit)] shadow-xs'
             : isLoser
             ? 'opacity-50 bg-[var(--surface2)] text-[var(--text-3)] line-through'
-            : 'bg-[var(--surface2)] hover:bg-[var(--surface3)] text-[var(--text)]'
+            : 'bg-[var(--surface2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border)]'
         }`}
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <FighterAvatar fighter={details.fighter} name={details.name} size="xs" />
+        <div className="flex items-center gap-2.5 min-w-0">
+          <FighterAvatar fighter={details.fighter} name={details.name} size={compact ? 'xs' : 'sm'} />
           <div className="min-w-0">
             <span className="block text-xs font-semibold truncate leading-tight">
               {details.name}
@@ -193,9 +198,15 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
           </div>
         </div>
 
-        {isWinner && (
-          <span className="text-xs font-bold text-[var(--credit)] ml-1 shrink-0">✓</span>
-        )}
+        {isWinner ? (
+          <span className="text-[11px] font-bold text-[var(--credit)] ml-1 shrink-0 px-2 py-0.5 rounded bg-[var(--credit-bg)] border border-[var(--credit-border)] font-mono">
+            ADVANCED ✓
+          </span>
+        ) : !compact && winner === null ? (
+          <span className="text-[10px] text-[var(--text-3)] ml-1 shrink-0 font-mono">
+            Tap to Advance →
+          </span>
+        ) : null}
       </button>
     );
   };

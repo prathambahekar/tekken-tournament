@@ -279,13 +279,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors flex flex-col">
-      {/* Toast Notification */}
+      {/* Toast Notification: Sharp Technical Box */}
       {toast && (
-        <div className="fixed top-16 sm:top-18 left-3.5 right-3.5 sm:left-auto sm:right-8 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs font-semibold shadow-lg text-[var(--text)] animate-in slide-in-from-top-2 duration-150">
+        <div className="fixed top-16 sm:top-20 left-4 right-4 sm:left-auto sm:right-8 z-50 flex items-center gap-2 px-4 py-2.5 border border-white bg-black text-xs font-mono text-white shadow-2xl">
           {toast.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-[var(--credit)] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
           ) : (
-            <Info className="w-4 h-4 text-[var(--amber)] shrink-0" />
+            <Info className="w-4 h-4 text-white shrink-0" />
           )}
           <span className="truncate">{toast.message}</span>
         </div>
@@ -304,8 +304,8 @@ export default function App() {
         format={format}
       />
 
-      {/* Main Content Viewport */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 pt-1 sm:pt-0 pb-24 md:pb-16">
+      {/* Main Content Viewport with generous whitespace */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-4 pb-24 md:pb-12">
         {activeTab === 'players' && (
           <PlayersTab
             state={state}
@@ -368,7 +368,7 @@ export default function App() {
         onTabChange={handleTabChange}
         completedMatches={completedMatches}
         totalMatches={totalMatches}
-        hasChampion={!!championName}
+        hasChampion={championIndex != null}
       />
 
       {/* Fighter Picker Modal */}

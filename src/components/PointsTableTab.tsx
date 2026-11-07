@@ -62,86 +62,91 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
   const selectedPlayerRow = standings.find((s) => s.i === selectedPlayerIdx) || standings[0];
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-150">
-      {/* Tekken 7 Card Container */}
-      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-5 shadow-xl space-y-4">
-        {/* Header with View Toggle */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--border)]/40">
-          <div>
-            <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
-              POINTS TABLE
-            </h3>
-            <div className="text-xs text-[var(--text-3)] font-mono mt-0.5">
-              {playedMatches} of {totalMatches} matches completed &mdash; {isSingle ? 'Single Round' : 'Double Round'}
+    <div className="space-y-6">
+      {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
+        {/* Section Header with Numbered Label */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
+                02 //
+              </span>
+              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
+                TOURNAMENT STANDINGS
+              </h2>
             </div>
+            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
+              SECTION 02 &mdash; {playedMatches} OF {totalMatches} FIXTURES COMPLETED &middot; {isSingle ? 'SINGLE' : 'DOUBLE'} ROUND-ROBIN
+            </p>
           </div>
 
-          {/* View Mode Toggle */}
-          <div className="inline-flex items-center p-0.5 bg-[var(--surface2)] rounded-md border border-[var(--border)] text-xs font-semibold self-start sm:self-auto">
+          {/* View Mode Toggle: Sharp Square Segmented Control */}
+          <div className="inline-flex border border-[var(--border)] bg-[var(--surface2)] text-xs font-mono self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setViewMode('table')}
-              className={`px-3 py-1.5 rounded transition-all inline-flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 transition-colors inline-flex items-center gap-1.5 ${
                 viewMode === 'table'
-                  ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                  ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                   : 'text-[var(--text-3)] hover:text-[var(--text)]'
               }`}
             >
               <ListOrdered className="w-3.5 h-3.5" />
-              <span>Leaderboard</span>
+              <span>[01] LEADERBOARD</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 rounded transition-all inline-flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 transition-colors border-l border-[var(--border)] inline-flex items-center gap-1.5 ${
                 viewMode === 'grid'
-                  ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                  ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                   : 'text-[var(--text-3)] hover:text-[var(--text)]'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Cross Grid</span>
+              <span>[02] CROSS MATRIX</span>
             </button>
           </div>
         </div>
 
         {/* VIEW 1: Leaderboard Table & Mobile Cards */}
         {viewMode === 'table' && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {/* Mobile Format Switcher for Leaderboard */}
-            <div className="sm:hidden flex items-center justify-between p-1 bg-[var(--surface2)] rounded-lg border border-[var(--border)] text-xs">
-              <span className="text-[11px] font-semibold text-[var(--text-3)] pl-2">
-                Mobile View:
+            <div className="sm:hidden flex items-center justify-between p-1 bg-[var(--surface2)] border border-[var(--border)] text-xs font-mono">
+              <span className="text-[11px] text-[var(--text-3)] pl-2 uppercase">
+                LAYOUT:
               </span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center border border-[var(--border)]">
                 <button
                   type="button"
                   onClick={() => setMobileLeaderboardMode('cards')}
-                  className={`min-h-[34px] px-3 py-1 rounded-md font-semibold transition-all ${
+                  className={`px-3 py-1 transition-colors ${
                     mobileLeaderboardMode === 'cards'
-                      ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs border border-[var(--border)]'
+                      ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                       : 'text-[var(--text-3)] hover:text-[var(--text)]'
                   }`}
                 >
-                  Cards
+                  CARDS
                 </button>
                 <button
                   type="button"
                   onClick={() => setMobileLeaderboardMode('table')}
-                  className={`min-h-[34px] px-3 py-1 rounded-md font-semibold transition-all ${
+                  className={`px-3 py-1 transition-colors border-l border-[var(--border)] ${
                     mobileLeaderboardMode === 'table'
-                      ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs border border-[var(--border)]'
+                      ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                       : 'text-[var(--text-3)] hover:text-[var(--text)]'
                   }`}
                 >
-                  Full Table
+                  TABLE
                 </button>
               </div>
             </div>
 
             {/* Mobile Mode: Leaderboard Cards */}
             {mobileLeaderboardMode === 'cards' && (
-              <div className="sm:hidden space-y-2.5">
+              <div className="sm:hidden space-y-2">
                 {standings.map((row, index) => {
                   const isTop4 = index < 4;
                   const isLeader = index === 0 && row.p > 0;
@@ -150,29 +155,25 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                   return (
                     <React.Fragment key={row.i}>
                       <div
-                        className={`p-3 rounded-lg bg-[var(--surface)] border transition-all shadow-2xs ${
+                        className={`p-3 bg-[var(--surface2)] border transition-colors ${
                           isLeader
-                            ? 'border-[var(--amber)] ring-1 ring-[var(--amber)]/40'
+                            ? 'border-[var(--ink-strong)]'
                             : isTop4
-                            ? 'border-[var(--border2)] bg-[var(--surface)]'
+                            ? 'border-[var(--border2)]'
                             : 'border-[var(--border)] opacity-85'
                         }`}
                       >
                         {/* Top: Rank + Avatar + Name + PTS */}
-                        <div className="flex items-center justify-between gap-2.5 pb-2 border-b border-[var(--border)]/60">
+                        <div className="flex items-center justify-between gap-2.5 pb-2 border-b border-[var(--border)]">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            {/* Rank Badge */}
+                            {/* Rank Badge: Square Monospace */}
                             <div
-                              className={`w-7 h-7 rounded-md flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
+                              className={`w-7 h-7 flex items-center justify-center font-mono font-bold text-xs shrink-0 border ${
                                 index === 0
-                                  ? 'bg-amber-400/20 text-[var(--amber)] border border-amber-400/40'
-                                  : index === 1
-                                  ? 'bg-zinc-300/20 text-zinc-300 border border-zinc-400/30'
-                                  : index === 2
-                                  ? 'bg-amber-700/20 text-amber-600 border border-amber-700/30'
+                                  ? 'bg-white text-black border-white'
                                   : isTop4
-                                  ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
-                                  : 'bg-[var(--surface2)] text-[var(--text-3)] border border-[var(--border)]'
+                                  ? 'border-[var(--border2)] text-[var(--ink-strong)]'
+                                  : 'border-[var(--border)] text-[var(--text-3)]'
                               }`}
                             >
                               {row.status === 'Q' ? 'Q' : `#${index + 1}`}
@@ -182,17 +183,17 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
 
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1.5">
-                                <span className="font-bold text-sm text-[var(--text)] truncate">
+                                <span className="font-bold text-sm text-[var(--ink-strong)] truncate">
                                   {row.name}
                                 </span>
                                 {isTop4 && (
-                                  <span className="text-[9px] font-mono font-bold uppercase px-1 rounded bg-[var(--credit-bg)] text-[var(--credit)] shrink-0">
-                                    Top 4
+                                  <span className="text-[9px] font-mono uppercase px-1 border border-[var(--border2)] text-[var(--ink-strong)] shrink-0">
+                                    TOP 4
                                   </span>
                                 )}
                               </div>
                               {row.fighter && (
-                                <span className="text-[11px] text-[var(--text-3)] truncate block leading-tight">
+                                <span className="text-[11px] text-[var(--text-3)] truncate block font-mono">
                                   {row.fighter.name} · {row.fighter.style}
                                 </span>
                               )}
@@ -201,37 +202,29 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
 
                           {/* Points Display */}
                           <div className="text-right shrink-0">
-                            <span className="font-display font-black text-base text-[var(--amber)] italic block leading-none">
-                              {row.pts} <span className="text-xs font-mono font-normal not-italic text-[var(--text-3)]">PTS</span>
+                            <span className="font-mono font-black text-lg text-[var(--ink-strong)] block leading-none tabular-nums">
+                              {row.pts} <span className="text-xs font-normal text-[var(--text-3)]">PTS</span>
                             </span>
                           </div>
                         </div>
 
                         {/* Bottom: Match Metrics Grid */}
-                        <div className="grid grid-cols-4 gap-1.5 pt-2 text-center text-xs">
-                          <div className="p-1 rounded bg-[var(--surface2)]/70">
-                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Played</span>
-                            <span className="font-mono font-bold text-[var(--text)]">{row.p}</span>
+                        <div className="grid grid-cols-4 gap-1 pt-2 text-center text-xs font-mono">
+                          <div className="p-1 bg-[var(--bg)] border border-[var(--border)]">
+                            <span className="text-[9px] text-[var(--text-3)] block uppercase">PLD</span>
+                            <span className="font-bold text-[var(--text)] tabular-nums">{row.p}</span>
                           </div>
-                          <div className="p-1 rounded bg-[var(--surface2)]/70">
-                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Won</span>
-                            <span className="font-mono font-bold text-[var(--credit)]">{row.w}</span>
+                          <div className="p-1 bg-[var(--bg)] border border-[var(--border)]">
+                            <span className="text-[9px] text-[var(--text-3)] block uppercase">WON</span>
+                            <span className="font-bold text-[var(--ink-strong)] tabular-nums">{row.w}</span>
                           </div>
-                          <div className="p-1 rounded bg-[var(--surface2)]/70">
-                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Lost</span>
-                            <span className="font-mono font-bold text-[var(--text-3)]">{row.l}</span>
+                          <div className="p-1 bg-[var(--bg)] border border-[var(--border)]">
+                            <span className="text-[9px] text-[var(--text-3)] block uppercase">LOST</span>
+                            <span className="font-bold text-[var(--text-3)] tabular-nums">{row.l}</span>
                           </div>
-                          <div className="p-1 rounded bg-[var(--surface2)]/70">
-                            <span className="text-[9px] text-[var(--text-3)] block font-mono">Diff</span>
-                            <span
-                              className={`font-mono font-bold ${
-                                row.diff > 0
-                                  ? 'text-[var(--credit)]'
-                                  : row.diff < 0
-                                  ? 'text-[var(--debit)]'
-                                  : 'text-[var(--text-3)]'
-                              }`}
-                            >
+                          <div className="p-1 bg-[var(--bg)] border border-[var(--border)]">
+                            <span className="text-[9px] text-[var(--text-3)] block uppercase">DIFF</span>
+                            <span className="font-bold text-[var(--text)] tabular-nums">
                               {row.diff > 0 ? `+${row.diff}` : row.diff}
                             </span>
                           </div>
@@ -240,40 +233,38 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
 
                       {/* Playoff Cutoff Indicator on Mobile */}
                       {isCutoff && standings.length > 4 && (
-                        <div className="py-1 px-3 rounded-md bg-[var(--amber-bg)]/30 border border-[var(--amber-border)] text-center text-[10px] font-bold uppercase tracking-wider text-[var(--amber)]">
-                          ▲ Top 4 Advance to Playoffs ▲
+                        <div className="py-1 px-3 border border-dashed border-[var(--border2)] text-center text-[10px] font-mono uppercase tracking-widest text-[var(--text-2)]">
+                          --- TOP 4 ADVANCE TO PLAYOFFS ---
                         </div>
                       )}
                     </React.Fragment>
                   );
                 })}
 
-                <div className="p-3 rounded-lg bg-[var(--surface2)] border border-[var(--border)] text-[11px] text-[var(--text-3)] space-y-1">
-                  <div className="flex justify-between">
-                    <span>2–0 win: <strong className="text-[var(--credit)]">+3 pts</strong></span>
-                    <span>2–1 win: <strong className="text-[var(--amber)]">+2 pts</strong></span>
-                    <span>Loss: <strong className="text-[var(--text-3)]">0 pts</strong></span>
-                  </div>
+                <div className="p-3 bg-[var(--surface2)] border border-[var(--border)] text-[11px] font-mono text-[var(--text-3)] flex justify-between">
+                  <span>WIN 2–0: <strong>+3 PTS</strong></span>
+                  <span>WIN 2–1: <strong>+2 PTS</strong></span>
+                  <span>LOSS: <strong>0 PTS</strong></span>
                 </div>
               </div>
             )}
 
-            {/* Desktop Table View & Mobile Full Table View */}
-            <div className={`${mobileLeaderboardMode === 'table' ? 'block' : 'hidden sm:block'} rounded-lg border border-[var(--border)] bg-[var(--surface2)]/40 overflow-hidden shadow-2xs`}>
+            {/* Desktop Table View & Mobile Full Table View: High-Contrast Monospace */}
+            <div className={`${mobileLeaderboardMode === 'table' ? 'block' : 'hidden sm:block'} border border-[var(--border)] bg-[var(--bg)] overflow-hidden`}>
               <div className="overflow-x-auto no-scrollbar">
                 <table className="w-full text-left text-sm border-collapse min-w-[340px]">
                   <thead>
-                    <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-xs text-[var(--text-3)] font-semibold select-none">
+                    <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-xs font-mono text-[var(--text-3)] uppercase select-none tracking-wider">
                       <th className="py-2.5 px-3 text-center w-12 border-r border-[var(--border)]">#</th>
-                      <th className="py-2.5 px-3 border-r border-[var(--border)]">Player</th>
+                      <th className="py-2.5 px-3 border-r border-[var(--border)]">COMPETITOR</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Played">P</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Wins">W</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Losses">L</th>
-                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Round Differential">Diff</th>
-                      <th className="py-2.5 px-4 text-right font-bold text-[var(--text)]">Pts</th>
+                      <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Round Differential">DIFF</th>
+                      <th className="py-2.5 px-4 text-right font-bold text-[var(--ink-strong)]">PTS</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[var(--border)]">
+                  <tbody className="divide-y divide-[var(--border)] font-mono">
                     {standings.map((row, index) => {
                       const isCutoff = index === 3;
                       const isTop4 = index < 4;
@@ -282,19 +273,19 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                       return (
                         <React.Fragment key={row.i}>
                           <tr
-                            className={`transition-colors hover:bg-[var(--surface2)]/60 ${
-                              isTop4 ? 'bg-[var(--amber-bg)]/10' : ''
+                            className={`transition-colors hover:bg-[var(--surface2)] ${
+                              isTop4 ? 'bg-[var(--surface2)]/40' : ''
                             }`}
                           >
                             {/* Rank */}
                             <td className="py-2.5 px-3 text-center font-mono font-bold text-xs border-r border-[var(--border)]">
                               {row.status === 'Q' ? (
-                                <span className="text-[var(--credit)] font-bold" title="Qualified">Q</span>
+                                <span className="font-bold text-[var(--ink-strong)]" title="Qualified">Q</span>
                               ) : row.status === 'DQ' ? (
                                 <span className="text-[var(--text-3)] opacity-60" title="Eliminated">DQ</span>
                               ) : (
-                                <span className={isLeader ? 'text-[var(--amber)]' : 'text-[var(--text-3)]'}>
-                                  {index + 1}
+                                <span className={isLeader ? 'text-[var(--ink-strong)] font-black' : 'text-[var(--text-3)]'}>
+                                  {String(index + 1).padStart(2, '0')}
                                 </span>
                               )}
                             </td>
@@ -304,11 +295,11 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                               <div className="flex items-center gap-2.5">
                                 <FighterAvatar fighter={row.fighter} name={row.name} size="xs" />
                                 <div className="min-w-0">
-                                  <span className="font-semibold text-sm text-[var(--text)] truncate block">
+                                  <span className="font-bold text-sm text-[var(--ink-strong)] truncate block font-sans">
                                     {row.name}
                                   </span>
                                   {row.fighter && (
-                                    <span className="text-[11px] text-[var(--text-3)] truncate block leading-tight">
+                                    <span className="text-[11px] text-[var(--text-3)] truncate block font-mono">
                                       {row.fighter.name}
                                     </span>
                                   )}
@@ -317,22 +308,20 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                             </td>
 
                             {/* Stats */}
-                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-2)] font-mono border-r border-[var(--border)]">
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text)] border-r border-[var(--border)]">
                               {row.p}
                             </td>
-                            <td className="py-2.5 px-2 text-center tabular-nums text-xs font-semibold text-[var(--credit)] font-mono border-r border-[var(--border)]">
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs font-bold text-[var(--ink-strong)] border-r border-[var(--border)]">
                               {row.w}
                             </td>
-                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-3)] font-mono border-r border-[var(--border)]">
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs text-[var(--text-3)] border-r border-[var(--border)]">
                               {row.l}
                             </td>
-                            <td className="py-2.5 px-2 text-center tabular-nums text-xs font-mono border-r border-[var(--border)]">
+                            <td className="py-2.5 px-2 text-center tabular-nums text-xs border-r border-[var(--border)]">
                               <span
                                 className={
                                   row.diff > 0
-                                    ? 'text-[var(--credit)] font-semibold'
-                                    : row.diff < 0
-                                    ? 'text-[var(--debit)]'
+                                    ? 'text-[var(--ink-strong)] font-bold'
                                     : 'text-[var(--text-3)]'
                                 }
                               >
@@ -341,17 +330,17 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                             </td>
 
                             {/* Points */}
-                            <td className="py-2.5 px-4 text-right font-display font-extrabold text-sm tabular-nums text-[var(--amber)]">
+                            <td className="py-2.5 px-4 text-right font-black text-sm tabular-nums text-[var(--ink-strong)]">
                               {row.pts}
                             </td>
                           </tr>
 
                           {/* Playoff cutoff banner */}
                           {isCutoff && standings.length > 4 && (
-                            <tr className="border-y-2 border-[var(--amber)]/40">
+                            <tr className="border-y border-[var(--border2)]">
                               <td colSpan={7} className="p-0">
-                                <div className="px-4 py-1.5 bg-[var(--surface2)] text-[10px] text-[var(--amber)] font-bold uppercase tracking-wider text-center">
-                                  Top 4 Advance to Playoffs
+                                <div className="px-4 py-1.5 bg-[var(--surface3)] text-[10px] font-mono text-[var(--ink-strong)] uppercase tracking-widest text-center">
+                                  --- ADVANCE TO PLAYOFF BRACKET (TOP 4 SEEDS) ---
                                 </div>
                               </td>
                             </tr>
@@ -364,429 +353,405 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
               </div>
 
               {/* Table Footer */}
-              <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] text-[var(--text-3)] flex items-center justify-between">
-                <span>Top 4 qualify for double-elimination playoffs</span>
-                <span>Win 2–0 = 3 pts · Win 2–1 = 2 pts · Loss = 0 pts</span>
+              <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] font-mono text-[var(--text-3)] flex items-center justify-between">
+                <span>TOP 4 SEEDS QUALIFY FOR DOUBLE-ELIMINATION PLAYOFFS</span>
+                <span>WIN 2–0 = 3 PTS &middot; WIN 2–1 = 2 PTS &middot; LOSS = 0 PTS</span>
               </div>
             </div>
           </div>
         )}
 
-      {/* VIEW 2: Cross Grid with Mobile Zero-Scroll Options & Solid Table Lines */}
-      {viewMode === 'grid' && (
-        <div className="space-y-3">
-          {/* Mobile Format Switcher */}
-          <div className="sm:hidden flex items-center justify-between p-1 bg-[var(--surface2)] rounded-md border border-[var(--border)] text-xs">
-            <span className="text-[11px] font-semibold text-[var(--text-3)] pl-2">
-              Mobile View:
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setMobileGridMode('cards')}
-                className={`px-2.5 py-1 rounded font-medium transition-all ${
-                  mobileGridMode === 'cards'
-                    ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs'
-                    : 'text-[var(--text-3)] hover:text-[var(--text)]'
-                }`}
-              >
-                H2H Cards
-              </button>
-              <button
-                type="button"
-                onClick={() => setMobileGridMode('compact')}
-                className={`px-2.5 py-1 rounded font-medium transition-all ${
-                  mobileGridMode === 'compact'
-                    ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs'
-                    : 'text-[var(--text-3)] hover:text-[var(--text)]'
-                }`}
-              >
-                Fit Screen
-              </button>
-              <button
-                type="button"
-                onClick={() => setMobileGridMode('full')}
-                className={`px-2.5 py-1 rounded font-medium transition-all ${
-                  mobileGridMode === 'full'
-                    ? 'bg-[var(--surface)] text-[var(--text)] shadow-xs'
-                    : 'text-[var(--text-3)] hover:text-[var(--text)]'
-                }`}
-              >
-                Full Grid
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Mode A: Zero-Scroll Head-to-Head Cards */}
-          {mobileGridMode === 'cards' && (
-            <div className="sm:hidden space-y-3">
-              {/* Player Selector Pills */}
-              <div className="space-y-1.5">
-                <span className="text-[11px] font-mono text-[var(--text-3)] px-1">
-                  Select Competitor:
-                </span>
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-                  {standings.map((p, idx) => {
-                    const isSelected = p.i === selectedPlayerIdx;
-                    return (
-                      <button
-                        key={p.i}
-                        type="button"
-                        onClick={() => setSelectedPlayerIdx(p.i)}
-                        className={`px-2.5 py-1 rounded-md border text-xs font-semibold shrink-0 transition-all active:scale-95 flex items-center gap-1.5 ${
-                          isSelected
-                            ? 'bg-[var(--accent)] text-[var(--accent-contrast)] border-[var(--accent)] shadow-xs'
-                            : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text)]'
-                        }`}
-                      >
-                        <span className="font-mono text-[10px] opacity-75">#{idx + 1}</span>
-                        <span>{p.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+        {/* VIEW 2: Cross Grid with Mobile Zero-Scroll Options & Solid Table Lines */}
+        {viewMode === 'grid' && (
+          <div className="space-y-4">
+            {/* Mobile Format Switcher */}
+            <div className="sm:hidden flex items-center justify-between p-1 bg-[var(--surface2)] border border-[var(--border)] text-xs font-mono">
+              <span className="text-[11px] text-[var(--text-3)] pl-2 uppercase">
+                LAYOUT:
+              </span>
+              <div className="flex items-center border border-[var(--border)]">
+                <button
+                  type="button"
+                  onClick={() => setMobileGridMode('cards')}
+                  className={`px-2.5 py-1 transition-colors ${
+                    mobileGridMode === 'cards'
+                      ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
+                      : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  H2H
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileGridMode('compact')}
+                  className={`px-2.5 py-1 transition-colors border-l border-[var(--border)] ${
+                    mobileGridMode === 'compact'
+                      ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
+                      : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  FIT
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileGridMode('full')}
+                  className={`px-2.5 py-1 transition-colors border-l border-[var(--border)] ${
+                    mobileGridMode === 'full'
+                      ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
+                      : 'text-[var(--text-3)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  FULL
+                </button>
               </div>
+            </div>
 
-              {/* Selected Player Stats Summary Card */}
-              {selectedPlayerRow && (
-                <div className="p-3 rounded-lg bg-[var(--surface)] border border-[var(--border)] shadow-xs flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <FighterAvatar fighter={selectedPlayerRow.fighter} name={selectedPlayerRow.name} size="sm" />
-                    <div>
-                      <span className="text-sm font-bold text-[var(--text)] block">
-                        {selectedPlayerRow.name}
-                      </span>
-                      {selectedPlayerRow.fighter && (
-                        <span className="text-[11px] text-[var(--text-3)] block">
-                          {selectedPlayerRow.fighter.name}
+            {/* Mobile Mode A: Zero-Scroll Head-to-Head Cards */}
+            {mobileGridMode === 'cards' && (
+              <div className="sm:hidden space-y-3">
+                {/* Player Selector Pills */}
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider block">
+                    SELECT COMPETITOR:
+                  </span>
+                  <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                    {standings.map((p, idx) => {
+                      const isSelected = p.i === selectedPlayerIdx;
+                      return (
+                        <button
+                          key={p.i}
+                          type="button"
+                          onClick={() => setSelectedPlayerIdx(p.i)}
+                          className={`px-2.5 py-1 border text-xs font-mono shrink-0 transition-colors flex items-center gap-1.5 ${
+                            isSelected
+                              ? 'bg-[var(--accent)] text-[var(--accent-contrast)] border-[var(--accent)] font-bold'
+                              : 'bg-[var(--surface2)] border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text)]'
+                          }`}
+                        >
+                          <span className="opacity-60">#{idx + 1}</span>
+                          <span>{p.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Selected Player Stats Summary Card */}
+                {selectedPlayerRow && (
+                  <div className="p-3 bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between font-mono">
+                    <div className="flex items-center gap-2.5">
+                      <FighterAvatar fighter={selectedPlayerRow.fighter} name={selectedPlayerRow.name} size="sm" />
+                      <div>
+                        <span className="text-sm font-bold text-[var(--ink-strong)] block font-sans">
+                          {selectedPlayerRow.name}
                         </span>
-                      )}
+                        {selectedPlayerRow.fighter && (
+                          <span className="text-[11px] text-[var(--text-3)] block">
+                            {selectedPlayerRow.fighter.name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-sm font-bold text-[var(--ink-strong)] block tabular-nums">
+                        {selectedPlayerRow.pts} PTS
+                      </span>
+                      <span className="text-[10px] text-[var(--text-3)] block tabular-nums">
+                        {selectedPlayerRow.w}W – {selectedPlayerRow.l}L ({selectedPlayerRow.p} PLD)
+                      </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-sm font-display font-bold text-[var(--amber)] block">
-                      {selectedPlayerRow.pts} PTS
-                    </span>
-                    <span className="text-[10px] text-[var(--text-3)] font-mono block">
-                      {selectedPlayerRow.w}W – {selectedPlayerRow.l}L ({selectedPlayerRow.p} played)
-                    </span>
+                )}
+
+                {/* Head to Head Rival Cards */}
+                <div className="space-y-2">
+                  <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-3)]">
+                    HEAD-TO-HEAD VS RIVALS
                   </div>
-                </div>
-              )}
+                  {standings
+                    .filter((rival) => rival.i !== selectedPlayerIdx)
+                    .map((rival) => {
+                      const h2h = getHeadToHeadResults(selectedPlayerIdx, rival.i);
+                      const leg1 = h2h[0];
+                      const leg2 = h2h[1];
+                      const totalPtsAgainstRival = (leg1?.pts || 0) + (isSingle ? 0 : (leg2?.pts || 0));
 
-              {/* Head to Head Rival Cards */}
-              <div className="space-y-2">
-                <div className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-3)] px-1">
-                  Head-to-Head vs Rivals
-                </div>
-                {standings
-                  .filter((rival) => rival.i !== selectedPlayerIdx)
-                  .map((rival) => {
-                    const h2h = getHeadToHeadResults(selectedPlayerIdx, rival.i);
-                    const leg1 = h2h[0];
-                    const leg2 = h2h[1];
-                    const totalPtsAgainstRival = (leg1?.pts || 0) + (isSingle ? 0 : (leg2?.pts || 0));
-
-                    return (
-                      <div
-                        key={rival.i}
-                        className="p-3 rounded-lg bg-[var(--surface)] border border-[var(--border)] shadow-2xs flex flex-col gap-2.5"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <FighterAvatar fighter={rival.fighter} name={rival.name} size="xs" />
-                            <div className="min-w-0">
-                              <span className="text-xs font-bold text-[var(--text)] truncate block">
-                                vs {rival.name}
-                              </span>
-                              {rival.fighter && (
-                                <span className="text-[10px] text-[var(--text-3)] truncate block">
-                                  {rival.fighter.name}
+                      return (
+                        <div
+                          key={rival.i}
+                          className="p-3 bg-[var(--surface)] border border-[var(--border)] flex flex-col gap-2.5 font-mono"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <FighterAvatar fighter={rival.fighter} name={rival.name} size="xs" />
+                              <div className="min-w-0">
+                                <span className="text-xs font-bold text-[var(--ink-strong)] truncate block font-sans">
+                                  vs {rival.name}
                                 </span>
-                              )}
+                                {rival.fighter && (
+                                  <span className="text-[10px] text-[var(--text-3)] truncate block">
+                                    {rival.fighter.name}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          <span className="text-[11px] font-mono font-bold text-[var(--amber)]">
-                            +{totalPtsAgainstRival} pts
-                          </span>
-                        </div>
-
-                        {/* Match Badges (Single: 1 card, Double: 2 cards) */}
-                        <div className={`grid ${isSingle ? 'grid-cols-1' : 'grid-cols-2'} gap-2 text-xs`}>
-                          {/* Match / Leg 1 */}
-                          <div className="p-2 rounded-md bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between">
-                            <span className="text-[10px] text-[var(--text-3)] font-mono">{isSingle ? 'Match' : 'Leg 1'}</span>
-                            {leg1 && leg1.played ? (
-                              <span
-                                className={`px-2 py-0.5 rounded font-mono font-bold text-[11px] ${
-                                  leg1.win
-                                    ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
-                                    : 'bg-[var(--debit-bg)] text-[var(--debit)] border border-[var(--debit-border)]'
-                                }`}
-                              >
-                                {leg1.win ? 'Won' : 'Lost'} {leg1.score}
-                              </span>
-                            ) : (
-                              <span className="text-[10px] text-[var(--text-3)] italic">Pending</span>
-                            )}
+                            <span className="text-[11px] font-bold text-[var(--ink-strong)] tabular-nums">
+                              +{totalPtsAgainstRival} PTS
+                            </span>
                           </div>
 
-                          {/* Leg 2 (Only in Double) */}
-                          {!isSingle && (
-                            <div className="p-2 rounded-md bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between">
-                              <span className="text-[10px] text-[var(--text-3)] font-mono">Leg 2</span>
-                              {leg2 && leg2.played ? (
+                          {/* Match Badges */}
+                          <div className={`grid ${isSingle ? 'grid-cols-1' : 'grid-cols-2'} gap-2 text-xs`}>
+                            {/* Leg 1 */}
+                            <div className="p-2 bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between">
+                              <span className="text-[10px] text-[var(--text-3)] uppercase">{isSingle ? 'MATCH' : 'LEG 1'}</span>
+                              {leg1 && leg1.played ? (
                                 <span
-                                  className={`px-2 py-0.5 rounded font-mono font-bold text-[11px] ${
-                                    leg2.win
-                                      ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
-                                      : 'bg-[var(--debit-bg)] text-[var(--debit)] border border-[var(--debit-border)]'
+                                  className={`px-2 py-0.5 border font-bold text-[11px] ${
+                                    leg1.win
+                                      ? 'border-[var(--ink-strong)] bg-white text-black'
+                                      : 'border-[var(--border)] text-[var(--text-3)]'
                                   }`}
                                 >
-                                  {leg2.win ? 'Won' : 'Lost'} {leg2.score}
+                                  {leg1.win ? 'WON' : 'LOST'} {leg1.score}
                                 </span>
                               ) : (
-                                <span className="text-[10px] text-[var(--text-3)] italic">Pending</span>
+                                <span className="text-[10px] text-[var(--text-3)]">PENDING</span>
                               )}
                             </div>
-                          )}
+
+                            {/* Leg 2 */}
+                            {!isSingle && (
+                              <div className="p-2 bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between">
+                                <span className="text-[10px] text-[var(--text-3)] uppercase">LEG 2</span>
+                                {leg2 && leg2.played ? (
+                                  <span
+                                    className={`px-2 py-0.5 border font-bold text-[11px] ${
+                                      leg2.win
+                                        ? 'border-[var(--ink-strong)] bg-white text-black'
+                                        : 'border-[var(--border)] text-[var(--text-3)]'
+                                    }`}
+                                  >
+                                    {leg2.win ? 'WON' : 'LOST'} {leg2.score}
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] text-[var(--text-3)]">PENDING</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Mobile Mode B: Fit-Screen Compact Grid (With Solid Table Lines) */}
-          {mobileGridMode === 'compact' && (
-            <div className="sm:hidden rounded-lg border border-[var(--border)] bg-[var(--surface)] overflow-hidden shadow-2xs">
-              <table className="w-full text-center text-xs table-fixed border-collapse">
-                <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-[10px] text-[var(--text-3)] font-mono font-bold">
-                    <th className="py-2 px-1 text-left w-14 border-r border-[var(--border)]">Player</th>
-                    {standings.map((col, idx) => (
-                      <th key={col.i} className="py-2 px-0.5 border-r border-[var(--border)] text-center">
-                        #{idx + 1}
+            {/* Mobile Mode B: Compact Matrix */}
+            {mobileGridMode === 'compact' && (
+              <div className="sm:hidden border border-[var(--border)] bg-[var(--surface)] overflow-hidden font-mono">
+                <table className="w-full text-center text-xs table-fixed border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-[10px] text-[var(--text-3)] uppercase font-bold">
+                      <th className="py-2 px-1 text-left w-14 border-r border-[var(--border)]">PLR</th>
+                      {standings.map((col, idx) => (
+                        <th key={col.i} className="py-2 px-0.5 border-r border-[var(--border)] text-center">
+                          #{idx + 1}
+                        </th>
+                      ))}
+                      <th className="py-2 px-1 w-9 text-right text-[var(--ink-strong)]">
+                        PTS
                       </th>
-                    ))}
-                    <th className="py-2 px-1 w-9 text-right text-[var(--amber)]">
-                      Pts
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {standings.map((row, rowIdx) => (
-                    <tr key={row.i} className="hover:bg-[var(--surface2)]/40">
-                      {/* Name / Seed */}
-                      <td className="py-2 px-1 text-left truncate text-[11px] font-bold text-[var(--text)] border-r border-[var(--border)]">
-                        <span className="font-mono text-[9px] text-[var(--text-3)] mr-1">#{rowIdx + 1}</span>
-                        <span>{row.name.slice(0, 4)}</span>
-                      </td>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--border)]">
+                    {standings.map((row, rowIdx) => (
+                      <tr key={row.i} className="hover:bg-[var(--surface2)]/40">
+                        <td className="py-2 px-1 text-left truncate text-[11px] font-bold text-[var(--ink-strong)] border-r border-[var(--border)]">
+                          <span className="text-[9px] text-[var(--text-3)] mr-1">#{rowIdx + 1}</span>
+                          <span>{row.name.slice(0, 4)}</span>
+                        </td>
 
-                      {/* Opponent columns */}
-                      {standings.map((col) => {
-                        if (row.i === col.i) {
+                        {standings.map((col) => {
+                          if (row.i === col.i) {
+                            return (
+                              <td key={col.i} className="p-0.5 bg-[var(--surface2)]/50 border-r border-[var(--border)]">
+                                <span className="text-[9px] text-[var(--text-3)] opacity-30">\</span>
+                              </td>
+                            );
+                          }
+
+                          const h2h = getHeadToHeadResults(row.i, col.i);
+                          const m1 = h2h[0];
+                          const m2 = h2h[1];
+
                           return (
-                            <td key={col.i} className="p-0.5 bg-[var(--surface2)]/50 border-r border-[var(--border)]">
-                              <span className="text-[9px] text-[var(--text-3)] opacity-30 font-mono">\</span>
-                            </td>
-                          );
-                        }
-
-                        const h2h = getHeadToHeadResults(row.i, col.i);
-                        const m1 = h2h[0];
-                        const m2 = h2h[1];
-
-                        return (
-                          <td key={col.i} className="p-0.5 border-r border-[var(--border)] text-[9px] font-mono leading-tight">
-                            <div className="flex flex-col items-center justify-center gap-0.5">
-                              {m1?.played ? (
-                                <span className={`w-full py-0.5 rounded font-bold ${m1.win ? 'bg-[var(--credit-bg)] text-[var(--credit)]' : 'bg-[var(--debit-bg)] text-[var(--debit)]'}`}>
-                                  {m1.score.replace('–', '')}
-                                </span>
-                              ) : (
-                                <span className="text-[var(--text-3)] opacity-30">—</span>
-                              )}
-                              {!isSingle && (
-                                m2?.played ? (
-                                  <span className={`w-full py-0.5 rounded font-bold ${m2.win ? 'bg-[var(--credit-bg)] text-[var(--credit)]' : 'bg-[var(--debit-bg)] text-[var(--debit)]'}`}>
-                                    {m2.score.replace('–', '')}
+                            <td key={col.i} className="p-0.5 border-r border-[var(--border)] text-[9px] leading-tight">
+                              <div className="flex flex-col items-center justify-center gap-0.5">
+                                {m1?.played ? (
+                                  <span className={`w-full py-0.5 font-bold ${m1.win ? 'bg-white text-black' : 'text-[var(--text-3)]'}`}>
+                                    {m1.score.replace('–', '')}
                                   </span>
                                 ) : (
                                   <span className="text-[var(--text-3)] opacity-30">—</span>
-                                )
-                              )}
-                            </div>
-                          </td>
-                        );
-                      })}
-
-                      {/* Points */}
-                      <td className="py-2 px-1 font-mono font-bold text-[11px] text-right text-[var(--amber)]">
-                        {row.pts}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <div className="p-2.5 border-t border-[var(--border)] bg-[var(--surface2)] text-[10px] text-[var(--text-3)] flex items-center justify-between">
-                <span>{isSingle ? 'Single Round: Head-to-head match' : 'Top = Leg 1 · Bottom = Leg 2'}</span>
-                <span className="font-semibold text-[var(--credit)]">Green: Win</span>
-              </div>
-            </div>
-          )}
-
-          {/* Full Grid Table (With Clear Solid Table Lines) */}
-          <div className={`${mobileGridMode === 'full' ? 'block' : 'hidden sm:block'} rounded-lg border border-[var(--border)] bg-[var(--surface)] overflow-hidden shadow-2xs`}>
-            <div className="overflow-x-auto no-scrollbar">
-              <table className="w-full text-center text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-[var(--text-3)] select-none">
-                    {/* Sticky Player Name Column Header */}
-                    <th className="py-2.5 px-3 text-left font-semibold text-xs sticky left-0 bg-[var(--surface2)] z-20 min-w-[140px] sm:min-w-[160px] border-r border-[var(--border)] shadow-[1px_0_0_0_var(--border)]">
-                      Player
-                    </th>
-                    {/* Column for each competitor */}
-                    {standings.map((colPlayer, idx) => (
-                      <th
-                        key={colPlayer.i}
-                        className="py-2.5 px-2 font-mono font-bold text-[11px] min-w-[72px] sm:min-w-[80px] border-r border-[var(--border)]"
-                        title={colPlayer.name}
-                      >
-                        <div className="truncate max-w-[70px] sm:max-w-[76px] mx-auto text-[var(--text)]">
-                          {idx + 1}. {colPlayer.name.split(' ')[0]}
-                        </div>
-                      </th>
-                    ))}
-                    {/* Totals */}
-                    <th className="py-2.5 px-3 font-semibold min-w-[50px] border-r border-[var(--border)]">
-                      W-L
-                    </th>
-                    <th className="py-2.5 px-3 font-bold text-[var(--amber)] min-w-[55px]">
-                      Pts
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {standings.map((rowPlayer, rowIdx) => (
-                    <tr key={rowPlayer.i} className="hover:bg-[var(--surface2)]/40 transition-colors">
-                      {/* Sticky Player Name Cell */}
-                      <td className="py-2 px-3 text-left sticky left-0 bg-[var(--surface)] z-10 border-r border-[var(--border)] shadow-[1px_0_0_0_var(--border)]">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] text-[var(--text-3)] w-4 text-center shrink-0">
-                            {rowIdx + 1}
-                          </span>
-                          <FighterAvatar fighter={rowPlayer.fighter} name={rowPlayer.name} size="xs" />
-                          <span className="font-bold text-xs truncate max-w-[85px] sm:max-w-[100px] text-[var(--text)]">
-                            {rowPlayer.name}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Matrix Cells */}
-                      {standings.map((colPlayer) => {
-                        const isSelf = rowPlayer.i === colPlayer.i;
-
-                        if (isSelf) {
-                          return (
-                            <td
-                              key={colPlayer.i}
-                              className="p-1 bg-[var(--surface2)]/60 border-r border-[var(--border)] select-none"
-                              title="Same player"
-                            >
-                              <div className="h-9 rounded-md bg-[var(--surface3)]/50 flex items-center justify-center font-mono text-[var(--text-3)] text-xs opacity-40">
-                                \
+                                )}
+                                {!isSingle && (
+                                  m2?.played ? (
+                                    <span className={`w-full py-0.5 font-bold ${m2.win ? 'bg-white text-black' : 'text-[var(--text-3)]'}`}>
+                                      {m2.score.replace('–', '')}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[var(--text-3)] opacity-30">—</span>
+                                  )
+                                )}
                               </div>
                             </td>
                           );
-                        }
+                        })}
 
-                        const h2h = getHeadToHeadResults(rowPlayer.i, colPlayer.i);
-                        const m1 = h2h[0];
-                        const m2 = h2h[1];
+                        <td className="py-2 px-1 font-bold text-[11px] text-right text-[var(--ink-strong)]">
+                          {row.pts}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-                        return (
-                          <td
-                            key={colPlayer.i}
-                            className="p-1 border-r border-[var(--border)] tabular-nums font-mono text-[11px]"
-                          >
-                            <div className="flex flex-col gap-1 justify-center items-center h-full min-h-[36px]">
-                              {/* Match 1 */}
-                              {m1?.played ? (
-                                <span
-                                  className={`px-1.5 py-0.5 rounded text-[10px] font-bold leading-tight ${
-                                    m1.win
-                                      ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
-                                      : 'bg-[var(--debit-bg)] text-[var(--debit)] border border-[var(--debit-border)]'
-                                  }`}
-                                  title={`${isSingle ? 'Match' : 'Leg 1'} (Rd ${m1.round}): ${m1.win ? 'Won' : 'Lost'} ${m1.score}`}
-                                >
-                                  {m1.score}
-                                </span>
-                              ) : (
-                                <span className="text-[var(--text-3)] opacity-40 text-[10px]">—</span>
-                              )}
+            {/* Desktop Full Cross-Grid Table: Precision Technical Alignment */}
+            <div className={`${mobileGridMode === 'full' ? 'block' : 'hidden sm:block'} border border-[var(--border)] bg-[var(--surface)] overflow-hidden font-mono`}>
+              <div className="overflow-x-auto no-scrollbar">
+                <table className="w-full text-center text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-[var(--text-3)] uppercase select-none tracking-wider text-[11px]">
+                      <th className="py-2.5 px-3 text-left font-bold sticky left-0 bg-[var(--surface2)] z-20 min-w-[140px] sm:min-w-[160px] border-r border-[var(--border)]">
+                        COMPETITOR
+                      </th>
+                      {standings.map((colPlayer, idx) => (
+                        <th
+                          key={colPlayer.i}
+                          className="py-2.5 px-2 font-bold min-w-[72px] sm:min-w-[80px] border-r border-[var(--border)]"
+                          title={colPlayer.name}
+                        >
+                          <div className="truncate max-w-[70px] sm:max-w-[76px] mx-auto text-[var(--ink-strong)]">
+                            #{idx + 1} {colPlayer.name.split(' ')[0]}
+                          </div>
+                        </th>
+                      ))}
+                      <th className="py-2.5 px-3 font-bold min-w-[50px] border-r border-[var(--border)]">
+                        W-L
+                      </th>
+                      <th className="py-2.5 px-3 font-bold text-[var(--ink-strong)] min-w-[55px]">
+                        PTS
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--border)]">
+                    {standings.map((rowPlayer, rowIdx) => (
+                      <tr key={rowPlayer.i} className="hover:bg-[var(--surface2)]/40 transition-colors">
+                        <td className="py-2 px-3 text-left sticky left-0 bg-[var(--surface)] z-10 border-r border-[var(--border)]">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-[var(--text-3)] w-4 text-center shrink-0">
+                              {rowIdx + 1}
+                            </span>
+                            <FighterAvatar fighter={rowPlayer.fighter} name={rowPlayer.name} size="xs" />
+                            <span className="font-bold text-xs truncate max-w-[85px] sm:max-w-[100px] text-[var(--ink-strong)] font-sans">
+                              {rowPlayer.name}
+                            </span>
+                          </div>
+                        </td>
 
-                              {/* Match 2 (Only in Double Round Robin) */}
-                              {!isSingle && (
-                                m2?.played ? (
+                        {standings.map((colPlayer) => {
+                          const isSelf = rowPlayer.i === colPlayer.i;
+
+                          if (isSelf) {
+                            return (
+                              <td
+                                key={colPlayer.i}
+                                className="p-1 bg-[var(--surface2)]/60 border-r border-[var(--border)] select-none"
+                              >
+                                <div className="h-9 bg-[var(--bg)] flex items-center justify-center text-[var(--text-3)] text-xs opacity-40">
+                                  \
+                                </div>
+                              </td>
+                            );
+                          }
+
+                          const h2h = getHeadToHeadResults(rowPlayer.i, colPlayer.i);
+                          const m1 = h2h[0];
+                          const m2 = h2h[1];
+
+                          return (
+                            <td
+                              key={colPlayer.i}
+                              className="p-1 border-r border-[var(--border)] tabular-nums text-[11px]"
+                            >
+                              <div className="flex flex-col gap-1 justify-center items-center h-full min-h-[36px]">
+                                {m1?.played ? (
                                   <span
-                                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold leading-tight ${
-                                      m2.win
-                                        ? 'bg-[var(--credit-bg)] text-[var(--credit)] border border-[var(--credit-border)]'
-                                        : 'bg-[var(--debit-bg)] text-[var(--debit)] border border-[var(--debit-border)]'
+                                    className={`px-1.5 py-0.5 text-[10px] font-bold border ${
+                                      m1.win
+                                        ? 'bg-white text-black border-white'
+                                        : 'text-[var(--text-3)] border-[var(--border)]'
                                     }`}
-                                    title={`Leg 2 (Rd ${m2.round}): ${m2.win ? 'Won' : 'Lost'} ${m2.score}`}
                                   >
-                                    {m2.score}
+                                    {m1.score}
                                   </span>
                                 ) : (
                                   <span className="text-[var(--text-3)] opacity-40 text-[10px]">—</span>
-                                )
-                              )}
-                            </div>
-                          </td>
-                        );
-                      })}
+                                )}
 
-                      {/* Record W-L */}
-                      <td className="py-2 px-3 border-r border-[var(--border)] font-mono text-xs tabular-nums text-[var(--text-2)]">
-                        {rowPlayer.w}–{rowPlayer.l}
-                      </td>
+                                {!isSingle && (
+                                  m2?.played ? (
+                                    <span
+                                      className={`px-1.5 py-0.5 text-[10px] font-bold border ${
+                                        m2.win
+                                          ? 'bg-white text-black border-white'
+                                          : 'text-[var(--text-3)] border-[var(--border)]'
+                                      }`}
+                                    >
+                                      {m2.score}
+                                    </span>
+                                  ) : (
+                                    <span className="text-[var(--text-3)] opacity-40 text-[10px]">—</span>
+                                  )
+                                )}
+                              </div>
+                            </td>
+                          );
+                        })}
 
-                      {/* Total Points */}
-                      <td className="py-2 px-3 font-display font-extrabold text-xs sm:text-sm tabular-nums text-[var(--amber)]">
-                        {rowPlayer.pts}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        <td className="py-2 px-3 border-r border-[var(--border)] text-xs tabular-nums text-[var(--text)]">
+                          {rowPlayer.w}–{rowPlayer.l}
+                        </td>
 
-            {/* Cross Grid Footer Legend */}
-            <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] text-[var(--text-3)] flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-[var(--credit)] inline-block"></span>
-                  <span>Win (Green)</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded bg-[var(--debit)] inline-block"></span>
-                  <span>Loss (Red)</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-[var(--text-3)] font-mono">—</span>
-                  <span>Unplayed</span>
-                </span>
+                        <td className="py-2 px-3 font-black text-xs sm:text-sm tabular-nums text-[var(--ink-strong)]">
+                          {rowPlayer.pts}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <span>{isSingle ? 'Single round-robin shows direct match result' : 'Leg 1 (top badge) · Leg 2 (bottom badge)'}</span>
+
+              {/* Cross Grid Footer Legend */}
+              <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] font-mono text-[var(--text-3)] flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1.5">
+                    <span className="px-1 py-0.2 bg-white text-black text-[9px] font-bold">WIN</span>
+                    <span>Direct Leg Victory</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-[var(--text-3)] font-mono">—</span>
+                    <span>Unplayed</span>
+                  </span>
+                </div>
+                <span>{isSingle ? 'SINGLE ROUND: 1 HEAD-TO-HEAD MATCH' : 'DOUBLE ROUND: TOP = LEG 1 · BOTTOM = LEG 2'}</span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

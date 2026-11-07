@@ -9,11 +9,11 @@ interface FighterAvatarProps {
 }
 
 const sizeMap = {
-  xs: 'w-6 h-6 text-[9px] rounded',
-  sm: 'w-8 h-8 text-xs rounded-md',
-  md: 'w-9 h-9 text-xs rounded-md',
-  lg: 'w-11 h-11 text-sm rounded-lg',
-  xl: 'w-14 h-14 text-base rounded-lg',
+  xs: 'w-6 h-6 text-[9px]',
+  sm: 'w-8 h-8 text-xs',
+  md: 'w-9 h-9 text-xs',
+  lg: 'w-11 h-11 text-sm',
+  xl: 'w-14 h-14 text-base',
 };
 
 function getInitials(name: string): string {
@@ -24,14 +24,6 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-function computeHue(str: string): number {
-  let h = 0;
-  for (let k = 0; k < str.length; k++) {
-    h = (h * 31 + str.charCodeAt(k)) % 360;
-  }
-  return h;
-}
-
 export const FighterAvatar: React.FC<FighterAvatarProps> = ({
   fighter,
   name,
@@ -40,27 +32,18 @@ export const FighterAvatar: React.FC<FighterAvatarProps> = ({
 }) => {
   const [imgError, setImgError] = useState(false);
   const displayText = fighter ? fighter.initials : name ? getInitials(name) : '?';
-  const hue = fighter ? fighter.hue : name ? computeHue(name) : 220;
-
-  const bgStyle = {
-    backgroundColor: `hsl(${hue}, 48%, 28%)`,
-    borderColor: `hsl(${hue}, 52%, 42%)`,
-    color: '#ffffff',
-  };
-
   const portraitSrc = fighter ? `/portraits/${fighter.id}.svg` : null;
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center font-bold shrink-0 overflow-hidden border shadow-xs select-none tracking-tight ${sizeMap[size]} ${className}`}
-      style={bgStyle}
+      className={`relative inline-flex items-center justify-center font-mono font-bold shrink-0 overflow-hidden border border-[var(--border2)] bg-[var(--surface2)] text-[var(--text)] select-none tracking-tight rounded-none ${sizeMap[size]} ${className}`}
       title={fighter ? `${fighter.name} (${fighter.style})` : name || 'Player'}
     >
       {portraitSrc && !imgError ? (
         <img
           src={portraitSrc}
           alt={fighter?.name || 'Fighter'}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover filter contrast-105"
           loading="lazy"
           onError={() => setImgError(true)}
         />

@@ -102,79 +102,77 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
   const n = state.names.length;
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-150">
-      {/* Main Tekken 7 Card with Red Top Border */}
-      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-6 shadow-xl space-y-5">
-        {/* Card Header: Gold Italic Title + Options */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--border)]/40">
-          <div className="flex items-center justify-between sm:justify-start gap-3">
+    <div className="space-y-6">
+      {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
+        {/* Section Header with Numbered Label */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
-                PLAYERS
-              </h3>
-              <span className="text-xs text-[var(--text-3)] font-mono">
-                ({n} fighters)
+              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
+                01 //
               </span>
+              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
+                COMPETITOR ROSTER
+              </h2>
             </div>
-            {savedIndicator && (
-              <span className="flex items-center gap-1 text-xs text-[var(--credit)] font-bold animate-in fade-in">
-                <Check className="w-3.5 h-3.5" /> Saved
-              </span>
-            )}
+            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
+              SECTION 01 &mdash; {n} REGISTERED PARTICIPANTS &middot; ASSIGN FIGHTERS &middot; CONFIGURE FORMAT
+            </p>
           </div>
 
-          {/* Quick Controls: Format & Stepper with touch-friendly sizes */}
-          <div className="flex flex-wrap items-center gap-2 justify-between sm:justify-end">
-            {/* Format Toggle: Single vs Double Round Robin */}
-            <div className="inline-flex items-center p-0.5 rounded-lg bg-[var(--surface2)] text-xs font-semibold border border-[var(--border)]">
+          {/* Quick Controls: Format Segment & Stepper */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Format Toggle: Sharp Segmented Control */}
+            <div className="inline-flex border border-[var(--border)] bg-[var(--surface2)] text-xs font-mono">
               <button
                 type="button"
                 onClick={() => onChangeFormat('single')}
-                className={`min-h-[36px] sm:min-h-0 px-3 py-1.5 rounded-md transition-all ${
+                className={`px-3 py-1.5 transition-colors ${
                   format === 'single'
-                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
                 title="Single Round-Robin"
               >
-                Single RR
+                SINGLE RR
               </button>
               <button
                 type="button"
                 onClick={() => onChangeFormat('double')}
-                className={`min-h-[36px] sm:min-h-0 px-3 py-1.5 rounded-md transition-all ${
+                className={`px-3 py-1.5 transition-colors border-l border-[var(--border)] ${
                   format === 'double'
-                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
                 title="Double Round-Robin"
               >
-                Double RR
+                DOUBLE RR
               </button>
             </div>
 
-            {/* Stepper with touch-friendly hitboxes */}
-            <div className="inline-flex items-center h-10 sm:h-8 rounded-lg bg-[var(--surface2)] text-xs font-semibold overflow-hidden border border-[var(--border)]">
+            {/* Stepper: Sharp Square Box */}
+            <div className="inline-flex items-center h-8 border border-[var(--border)] bg-[var(--surface2)] text-xs font-mono">
               <button
                 type="button"
                 onClick={() => onChangePlayerCount(n - 1)}
                 disabled={n <= 4}
-                className="w-10 sm:w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
                 aria-label="Decrease player count"
               >
-                <Minus className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+                <Minus className="w-3.5 h-3.5" />
               </button>
-              <span className="min-w-8 text-center px-1 tabular-nums font-mono text-xs text-[var(--text)] font-bold">
-                {n}
+              <span className="w-9 text-center tabular-nums font-mono text-xs text-[var(--ink-strong)] font-bold border-x border-[var(--border)]">
+                {String(n).padStart(2, '0')}
               </span>
               <button
                 type="button"
                 onClick={() => onChangePlayerCount(n + 1)}
                 disabled={n >= 16}
-                className="w-10 sm:w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="w-8 h-full flex items-center justify-center text-[var(--text-2)] hover:bg-[var(--surface3)] disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
                 aria-label="Increase player count"
               >
-                <Plus className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+                <Plus className="w-3.5 h-3.5" />
               </button>
             </div>
 
@@ -182,9 +180,9 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             <div className="relative">
               <button
                 onClick={() => setShowMoreActions((prev) => !prev)}
-                className={`h-10 w-10 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center transition-all border border-[var(--border)] active:scale-95 ${
+                className={`h-8 w-8 flex items-center justify-center transition-colors border border-[var(--border)] ${
                   showMoreActions
-                    ? 'bg-[var(--surface2)] text-[var(--text)]'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)]'
                     : 'bg-[var(--surface2)] text-[var(--text-2)] hover:text-[var(--text)]'
                 }`}
                 title="More options"
@@ -199,27 +197,27 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowMoreActions(false)}
                   />
-                  <div className="absolute right-0 mt-1.5 w-52 rounded-xl bg-[var(--surface)] shadow-2xl py-1 z-50 text-xs border border-[var(--border2)]">
+                  <div className="absolute right-0 mt-1 w-56 bg-[var(--surface)] border border-[var(--border2)] py-1 z-50 text-xs font-mono shadow-2xl">
                     <button
                       onClick={handleShuffleSeeds}
-                      className="w-full px-3.5 py-2.5 text-left text-[var(--text)] hover:bg-[var(--surface2)] active:bg-[var(--surface2)] flex items-center gap-2.5"
+                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
                     >
-                      <Shuffle className="w-4 h-4 text-[var(--text-3)]" />
-                      <span>Shuffle Seeds</span>
+                      <Shuffle className="w-3.5 h-3.5 text-[var(--text-3)]" />
+                      <span>SHUFFLE SEED ORDER</span>
                     </button>
                     <button
                       onClick={handleResetToDefaultNames}
-                      className="w-full px-3.5 py-2.5 text-left text-[var(--text)] hover:bg-[var(--surface2)] active:bg-[var(--surface2)] flex items-center gap-2.5"
+                      className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
                     >
-                      <RotateCcw className="w-4 h-4 text-[var(--text-3)]" />
-                      <span>Reset Names to Default</span>
+                      <RotateCcw className="w-3.5 h-3.5 text-[var(--text-3)]" />
+                      <span>RESET NAMES TO DEFAULT</span>
                     </button>
                     <button
                       onClick={handleClearAllFighters}
-                      className="w-full px-3.5 py-2.5 text-left text-[#e51b24] hover:bg-red-500/10 active:bg-red-500/15 flex items-center gap-2.5"
+                      className="w-full px-3 py-2 text-left text-[var(--danger)] hover:bg-[var(--surface2)] flex items-center gap-2 border-t border-[var(--border)]"
                     >
-                      <Trash2 className="w-4 h-4" />
-                      <span>Clear All Fighters</span>
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>CLEAR ALL FIGHTERS</span>
                     </button>
                   </div>
                 </>
@@ -228,8 +226,8 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
           </div>
         </div>
 
-        {/* Players Inputs Grid matching Tekken 7 Screenshot */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* Editorial Grid: Player Input Cards with Swiss Technical Alignments */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {state.names.map((_, idx) => {
             const charId = state.chars[idx];
             const fighter = charId ? ROSTER_MAP[charId] || null : null;
@@ -237,9 +235,20 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
             return (
               <div
                 key={idx}
-                className="flex flex-col gap-2 p-2.5 sm:p-2 rounded-lg bg-[var(--surface2)]/60 border border-[var(--border)] transition-colors shadow-2xs"
+                className="flex flex-col gap-2 p-3 bg-[var(--surface2)] border border-[var(--border)] transition-colors hover:border-[var(--border2)]"
               >
-                {/* Name Input with 16px font-size to prevent mobile browser auto-zoom */}
+                {/* Index & Name Field */}
+                <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] pb-1.5">
+                  <span className="font-mono text-[10px] text-[var(--text-3)] tracking-widest uppercase">
+                    SEEDED #{String(idx + 1).padStart(2, '0')}
+                  </span>
+                  {fighter && (
+                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--text-3)]">
+                      {fighter.id}
+                    </span>
+                  )}
+                </div>
+
                 <div className="relative">
                   <input
                     type="text"
@@ -248,21 +257,18 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                     onChange={(e) => handleNameChange(idx, e.target.value)}
                     onBlur={() => handleNameBlur(idx)}
                     placeholder={`Player ${idx + 1}`}
-                    className="w-full px-3 py-2 sm:py-1.5 text-base sm:text-sm font-semibold rounded-md bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] focus:border-[#e51b24] focus:outline-none transition-colors"
+                    className="w-full px-2.5 py-1.5 text-sm font-sans font-semibold bg-[var(--bg)] border border-[var(--border)] text-[var(--ink-strong)] focus:border-[var(--ink-strong)] focus:outline-none transition-colors"
                   />
-                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 font-mono text-[10px] text-[var(--text-3)] pointer-events-none">
-                    #{idx + 1}
-                  </span>
                 </div>
 
-                {/* Character Picker Trigger Button - 44px touch target on mobile */}
+                {/* Character Picker Button */}
                 <button
                   type="button"
                   onClick={() => onOpenCharacterPicker(idx)}
-                  className="flex items-center justify-between px-2.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-md bg-[var(--surface)] hover:bg-[var(--surface2)] active:scale-[0.99] text-left transition-all border border-[var(--border)]/70 shadow-2xs"
-                  title="Choose Tekken 7 fighter"
+                  className="flex items-center justify-between px-2.5 py-2 min-h-[44px] bg-[var(--surface)] hover:bg-[var(--surface3)] text-left transition-colors border border-[var(--border)]"
+                  title="Assign Tekken 7 Fighter"
                 >
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <FighterAvatar
                       fighter={fighter}
                       name={localNames[idx] || `Player ${idx + 1}`}
@@ -270,96 +276,104 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                     />
                     <div className="min-w-0">
                       <span
-                        className={`text-xs sm:text-[11px] font-semibold truncate block ${
-                          fighter ? 'text-[var(--text)]' : 'text-[var(--text-3)]'
+                        className={`text-xs font-mono font-bold truncate block ${
+                          fighter ? 'text-[var(--ink-strong)]' : 'text-[var(--text-3)]'
                         }`}
                       >
-                        {fighter ? fighter.name : 'Choose Fighter'}
+                        {fighter ? fighter.name.toUpperCase() : 'SELECT FIGHTER'}
                       </span>
                       {fighter && (
-                        <span className="text-[10px] text-[var(--text-3)] truncate block leading-tight">
+                        <span className="text-[10px] text-[var(--text-3)] truncate block font-sans">
                           {fighter.style}
                         </span>
                       )}
                     </div>
                   </div>
-                  {fighter ? (
-                    <span className="text-[9px] text-[#ffb703] font-mono shrink-0 font-bold ml-1">
-                      {fighter.id.toUpperCase()}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-[var(--text-3)] shrink-0">+</span>
-                  )}
+                  <span className="text-xs font-mono text-[var(--text-3)] shrink-0 ml-1">
+                    {fighter ? 'EDIT' : '+'}
+                  </span>
                 </button>
               </div>
             );
           })}
         </div>
 
-        {/* Save Names & Secondary Actions */}
-        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={handleSaveNames}
-            className="w-full sm:w-auto min-h-[44px] sm:min-h-0 px-5 py-2 rounded-lg sm:rounded-md text-xs font-bold font-sans bg-[var(--surface2)] hover:bg-[var(--surface3)] active:scale-[0.99] text-[var(--text)] border border-[var(--border2)] hover:border-[#e51b24] transition-all shadow-xs inline-flex items-center justify-center gap-2"
-          >
-            <span>Save names</span>
-            {savedIndicator && <Check className="w-3.5 h-3.5 text-[var(--credit)]" />}
-          </button>
+        {/* Footer Actions: Stark Inverted Monochrome Button */}
+        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-[var(--border)]">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleSaveNames}
+              className="px-5 py-2 text-xs font-mono font-bold tracking-wider uppercase bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 active:scale-95 transition-all inline-flex items-center justify-center gap-2"
+            >
+              <span>SAVE CONFIGURATION</span>
+              {savedIndicator && <Check className="w-3.5 h-3.5" />}
+            </button>
+            {savedIndicator && (
+              <span className="text-xs font-mono text-[var(--text-2)] uppercase">
+                &check; UPDATED
+              </span>
+            )}
+          </div>
 
-          {/* Secondary Actions */}
-          <div className="flex items-center justify-around sm:justify-end gap-2 sm:gap-4 text-xs text-[var(--text-3)] pt-1 sm:pt-0 border-t sm:border-t-0 border-[var(--border)]/40">
+          {/* Secondary Actions: Thin Bordered Tech Buttons */}
+          <div className="flex items-center justify-around sm:justify-end gap-2 text-xs font-mono text-[var(--text-3)]">
             <button
               onClick={onExport}
-              className="min-h-[40px] px-2.5 hover:text-[var(--text)] active:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--border2)] hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
-              <Download className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#ffb703]" />
-              <span>Export</span>
+              <Download className="w-3.5 h-3.5" />
+              <span>EXPORT JSON</span>
             </button>
             <button
               type="button"
               onClick={onOpenImportModal}
-              className="min-h-[40px] px-2.5 hover:text-[var(--text)] active:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--border2)] hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
-              <Upload className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#22c55e]" />
-              <span>Import</span>
+              <Upload className="w-3.5 h-3.5" />
+              <span>IMPORT JSON</span>
             </button>
             <button
               onClick={() => setConfirmResetOpen(true)}
-              className="min-h-[40px] px-2.5 hover:text-[#e51b24] active:text-[#e51b24] transition-colors inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--danger)] hover:text-[var(--danger)] transition-colors inline-flex items-center gap-1.5"
             >
-              <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-              <span>Reset</span>
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>RESET RESULTS</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Reset Confirmation Dialog */}
+      {/* Reset Confirmation Dialog: Sharp Square Modal */}
       {confirmResetOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs">
-          <div className="w-full max-w-sm p-5 rounded-lg bg-[var(--surface)] border border-[var(--border2)] shadow-2xl space-y-3">
-            <h4 className="text-sm font-bold text-[var(--text)] font-display uppercase tracking-wide">
-              Reset match results?
-            </h4>
-            <p className="text-xs text-[var(--text-2)] leading-relaxed">
-              This will clear all {playedCount} recorded scores and playoff brackets. Player names and assigned fighters will be kept.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xs">
+          <div className="w-full max-w-sm p-5 bg-[var(--surface)] border border-[var(--border2)] space-y-4">
+            <div className="space-y-1">
+              <span className="font-mono text-[10px] text-[var(--danger)] tracking-widest uppercase">
+                WARNING // CONFIRMATION
+              </span>
+              <h4 className="text-sm font-black text-[var(--ink-strong)] font-display uppercase tracking-wide">
+                RESET MATCH RESULTS?
+              </h4>
+            </div>
+            <p className="text-xs text-[var(--text-2)] font-mono leading-relaxed">
+              This action clears all {playedCount} recorded scores and playoff brackets. Competitor names and assigned fighters will be preserved.
             </p>
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--border)]">
               <button
                 onClick={() => setConfirmResetOpen(false)}
-                className="px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)]"
+                className="px-3 py-1.5 text-xs font-mono uppercase bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border border-[var(--border)]"
               >
-                Cancel
+                CANCEL
               </button>
               <button
                 onClick={() => {
                   onResetResults();
                   setConfirmResetOpen(false);
                 }}
-                className="px-3 py-1.5 text-xs font-bold rounded-md bg-[#e51b24] text-white hover:opacity-90"
+                className="px-3 py-1.5 text-xs font-mono font-bold uppercase bg-[var(--danger)] text-white hover:opacity-90"
               >
-                Reset
+                CONFIRM RESET
               </button>
             </div>
           </div>

@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { TournamentState, MatchResultValue, KnockoutMatchId } from '../types';
 import { ROSTER_MAP } from '../data/roster';
-import { buildFixtures } from '../utils/tournament';
-import { X, Upload, FileText, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { X, Upload, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 
 interface ImportModalProps {
   isOpen: boolean;
@@ -144,7 +143,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     reader.readAsText(file);
   };
 
-  // One-click load for the user's fixed attachment
+  // One-click load for preset
   const handleLoadAttachmentPreset = async () => {
     try {
       const res = await fetch('/assets/aistudio/tekken-tournament-2026-11-03-fixed_46028ca2.json');
@@ -155,7 +154,6 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       setJsonText(text);
       parseAndValidate(text);
     } catch (err) {
-      // Fallback: embedded JSON from the attachment
       const fallback = JSON.stringify({
         app: 'tekken-home',
         version: 1,
@@ -187,28 +185,25 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-xs select-none"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex flex-col w-full max-w-lg max-h-[88vh] sm:max-h-[82vh] bg-[var(--surface)] border-t sm:border border-[var(--border)] rounded-t-xl sm:rounded-xl shadow-2xl overflow-hidden pb-safe sm:pb-0">
-        {/* Mobile Drag Indicator */}
-        <div className="w-10 h-1 bg-[var(--border2)] rounded-sm mx-auto my-2 sm:hidden shrink-0" />
-
+      <div className="flex flex-col w-full max-w-lg max-h-[88vh] sm:max-h-[82vh] bg-[var(--surface)] border border-[var(--border2)] shadow-2xl overflow-hidden pb-safe sm:pb-0 font-mono">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-[var(--border)] bg-[var(--surface2)]">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[var(--border)] bg-[var(--surface2)]">
           <div className="flex items-center gap-2">
-            <Upload className="w-4 h-4 text-[var(--credit)]" />
-            <h3 className="text-base font-bold font-display text-[var(--text)]">
-              Import Tournament
+            <Upload className="w-4 h-4 text-white" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink-strong)]">
+              IMPORT TOURNAMENT DATABASE
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface3)]"
+            className="w-7 h-7 flex items-center justify-center text-[var(--text-3)] hover:text-white hover:bg-[var(--surface3)] transition-colors"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -217,22 +212,22 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
         <div className="p-4 sm:p-5 space-y-4 overflow-y-auto">
           {/* Preset Quick Load */}
-          <div className="p-3 rounded-xl bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between gap-3 text-xs">
+          <div className="p-3 bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between gap-3 text-xs">
             <div>
-              <span className="font-semibold text-[var(--text)] block">
-                Load Attached File
+              <span className="font-bold text-[var(--ink-strong)] block uppercase">
+                LOAD PRESET ARCHIVE
               </span>
-              <span className="text-[var(--text-3)]">
+              <span className="text-[var(--text-3)] text-[11px]">
                 Pius, Hrishi, Ritu... (42 matches & playoffs)
               </span>
             </div>
             <button
               type="button"
               onClick={handleLoadAttachmentPreset}
-              className="px-3 py-1.5 rounded-lg bg-[var(--accent)] text-[var(--accent-contrast)] font-semibold hover:opacity-90 inline-flex items-center gap-1.5 shrink-0"
+              className="px-3 py-1.5 bg-white text-black font-bold uppercase tracking-wider text-xs hover:opacity-90 inline-flex items-center gap-1.5 shrink-0"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Load Preset</span>
+              <span>LOAD PRESET</span>
             </button>
           </div>
 
@@ -241,11 +236,11 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="p-6 rounded-xl border-2 border-dashed border-[var(--border2)] hover:border-[var(--amber)] bg-[var(--surface2)]/50 cursor-pointer text-center transition-colors space-y-2"
+            className="p-6 border border-dashed border-[var(--border2)] hover:border-white bg-[var(--surface2)] cursor-pointer text-center transition-colors space-y-2"
           >
-            <Upload className="w-6 h-6 mx-auto text-[var(--text-3)]" />
-            <div className="text-xs text-[var(--text-2)]">
-              <span className="font-semibold text-[var(--text)]">Click to choose a JSON file</span> or drag & drop here
+            <Upload className="w-5 h-5 mx-auto text-[var(--text-3)]" />
+            <div className="text-xs text-[var(--text-2)] uppercase">
+              <span className="font-bold text-white">SELECT JSON FILE</span> OR DRAG & DROP
             </div>
             <input
               ref={fileInputRef}
@@ -258,8 +253,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
           {/* Paste JSON area */}
           <div>
-            <label className="block text-xs font-semibold text-[var(--text-3)] mb-1 uppercase tracking-wider">
-              Or Paste JSON Data:
+            <label className="block text-[11px] font-bold text-[var(--text-3)] mb-1 uppercase tracking-wider">
+              OR PASTE JSON PAYLOAD:
             </label>
             <textarea
               value={jsonText}
@@ -274,13 +269,13 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               }}
               rows={4}
               placeholder='Paste tournament JSON string here...'
-              className="w-full p-2.5 text-sm sm:text-xs font-mono bg-[var(--surface2)] border border-[var(--border)] rounded-xl text-[var(--text)] focus:outline-none focus:border-[var(--amber)] transition-colors resize-none"
+              className="w-full p-2.5 text-xs font-mono bg-[var(--bg)] border border-[var(--border)] text-[var(--ink-strong)] focus:outline-none focus:border-white transition-colors resize-none"
             />
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--debit-bg)] border border-[var(--debit-border)] text-xs text-[var(--debit)]">
+            <div className="flex items-center gap-2 p-3 bg-[var(--surface2)] border border-[var(--danger)] text-xs text-[var(--danger)]">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -288,23 +283,23 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
           {/* Valid Preview Card */}
           {preview && (
-            <div className="p-4 rounded-xl bg-[var(--credit-bg)] border border-[var(--credit-border)] space-y-2.5 animate-in fade-in">
-              <div className="flex items-center gap-2 text-xs font-bold text-[var(--credit)]">
+            <div className="p-3.5 bg-[var(--surface2)] border border-white space-y-2 text-xs">
+              <div className="flex items-center gap-2 font-bold text-white uppercase">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Ready to Import:</span>
+                <span>VALID TOURNAMENT ARCHIVE:</span>
               </div>
-              <div className="text-xs space-y-1 text-[var(--text-2)]">
+              <div className="space-y-1 text-[var(--text-2)] text-[11px]">
                 <div>
-                  <span className="font-semibold text-[var(--text)]">{preview.names.length} Competitors:</span>{' '}
+                  <span className="text-white font-bold">{preview.names.length} COMPETITORS:</span>{' '}
                   {preview.names.join(', ')}
                 </div>
                 <div>
-                  <span className="font-semibold text-[var(--text)]">Recorded Matches:</span>{' '}
+                  <span className="text-white font-bold">MATCH RECORD:</span>{' '}
                   {preview.matchesCount} completed fixtures
                 </div>
                 <div>
-                  <span className="font-semibold text-[var(--text)]">Playoffs:</span>{' '}
-                  {preview.hasKnockout ? 'Bracket progression included' : 'No playoff matches played yet'}
+                  <span className="text-white font-bold">PLAYOFF BRACKET:</span>{' '}
+                  {preview.hasKnockout ? 'Progression state included' : 'No playoff matches played yet'}
                 </div>
               </div>
             </div>
@@ -312,19 +307,19 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-4 sm:px-5 py-3 border-t border-[var(--border)] bg-[var(--surface2)]">
+        <div className="flex items-center justify-end gap-2 px-4 sm:px-5 py-3 border-t border-[var(--border)] bg-[var(--surface2)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 sm:py-1.5 text-xs font-semibold rounded-xl text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface3)] transition-colors min-h-[40px] sm:min-h-0"
+            className="px-4 py-1.5 text-xs uppercase bg-[var(--surface)] hover:bg-[var(--surface3)] border border-[var(--border)] text-[var(--text-2)] hover:text-white transition-colors"
           >
-            Cancel
+            CANCEL
           </button>
           <button
             onClick={handleConfirmImport}
             disabled={!preview}
-            className="px-4 py-2 sm:py-1.5 text-xs font-bold rounded-xl bg-[var(--credit)] text-white hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all min-h-[40px] sm:min-h-0"
+            className="px-4 py-1.5 text-xs font-bold uppercase bg-white text-black hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
-            Import & Replace Current Data
+            OVERWRITE & IMPORT
           </button>
         </div>
       </div>

@@ -19,15 +19,17 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 }) => {
   const tabs: {
     id: ActiveTab;
+    num: string;
     label: string;
     icon: React.ComponentType<{ className?: string }>;
     badge?: string | boolean;
   }[] = [
-    { id: 'players', label: 'Players', icon: Users },
-    { id: 'rules', label: 'Rules', icon: BookOpen },
-    { id: 'table', label: 'Standings', icon: Trophy },
+    { id: 'players', num: '01', label: 'Roster', icon: Users },
+    { id: 'rules', num: '02', label: 'Rules', icon: BookOpen },
+    { id: 'table', num: '03', label: 'Table', icon: Trophy },
     {
       id: 'matches',
+      num: '04',
       label: 'Matches',
       icon: Swords,
       badge:
@@ -37,18 +39,19 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     },
     {
       id: 'knockout',
+      num: '05',
       label: 'Playoffs',
       icon: GitBranch,
-      badge: hasChampion ? '🏆' : undefined,
+      badge: hasChampion ? 'WIN' : undefined,
     },
   ];
 
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--surface)]/95 backdrop-blur-md border-t border-[var(--border)] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.15)] select-none"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg)]/95 backdrop-blur-md border-t border-[var(--border)] pb-safe select-none"
     >
-      <div className="grid grid-cols-5 h-16 items-center px-1">
+      <div className="grid grid-cols-5 h-16 items-center divide-x divide-[var(--border)]">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -58,32 +61,28 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               key={tab.id}
               type="button"
               onClick={() => onTabChange(tab.id)}
-              className={`relative flex flex-col items-center justify-center h-full min-h-[48px] py-1 transition-all active:scale-95 ${
+              className={`relative flex flex-col items-center justify-center h-full min-h-[48px] py-1 transition-colors ${
                 isActive
-                  ? 'text-[#e51b24]'
+                  ? 'bg-[var(--surface2)] text-[var(--ink-strong)]'
                   : 'text-[var(--text-3)] hover:text-[var(--text)]'
               }`}
             >
-              {/* Active Top Bar Indicator */}
+              {/* Active Top Line Indicator */}
               {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-[#e51b24] rounded-b-sm shadow-[0_0_8px_rgba(229,27,36,0.8)]" />
+                <span className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--ink-strong)]" />
               )}
 
-              {/* Icon Container with Badge */}
+              {/* Icon & Tech Badge */}
               <div className="relative flex items-center justify-center">
-                <Icon
-                  className={`w-5 h-5 transition-transform ${
-                    isActive ? 'scale-110 text-[#e51b24]' : ''
-                  }`}
-                />
+                <Icon className="w-4 h-4" />
                 {tab.badge && (
                   <span
-                    className={`absolute -top-1.5 -right-3 text-[9px] font-mono font-bold px-1 rounded-full ${
-                      tab.badge === '🏆'
-                        ? 'bg-transparent text-sm -top-2'
+                    className={`absolute -top-2 -right-3 text-[8px] font-mono font-bold px-1 border ${
+                      tab.badge === 'WIN'
+                        ? 'border-[var(--ink-strong)] text-[var(--ink-strong)]'
                         : isActive
-                        ? 'bg-[#e51b24] text-white'
-                        : 'bg-[var(--surface3)] text-[var(--text-2)]'
+                        ? 'border-[var(--ink-strong)] bg-[var(--ink-strong)] text-[var(--accent-contrast)]'
+                        : 'border-[var(--border2)] bg-[var(--surface3)] text-[var(--text-2)]'
                     }`}
                   >
                     {tab.badge}
@@ -91,13 +90,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 )}
               </div>
 
-              {/* Label */}
-              <span
-                className={`text-[11px] font-display font-bold italic tracking-wide mt-1 leading-tight ${
-                  isActive ? 'text-[var(--text)]' : 'text-[var(--text-3)]'
-                }`}
-              >
-                {tab.label}
+              {/* Minimalist Tech Label with Number */}
+              <span className="text-[10px] font-mono tracking-wider mt-1 leading-tight flex items-center gap-0.5">
+                <span className="opacity-60">{tab.num}.</span>
+                <span className={isActive ? 'font-bold' : ''}>{tab.label}</span>
               </span>
             </button>
           );

@@ -48,15 +48,15 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
   const championStandingsRow = championIndex != null ? standings.find((s) => s.i === championIndex) : null;
   const runnerUpStandingsRow = runnerUpIndex != null ? standings.find((s) => s.i === runnerUpIndex) : null;
 
-  // Trigger victory confetti when champion is crowned
+  // Trigger victory confetti when champion is crowned (monochrome stark white & silver)
   useEffect(() => {
     if (championIndex != null) {
       try {
         confetti({
-          particleCount: 90,
-          spread: 75,
+          particleCount: 80,
+          spread: 70,
           origin: { y: 0.6 },
-          colors: ['#e8141c', '#f5b81c', '#26b24f', '#ffffff'],
+          colors: ['#ffffff', '#ededed', '#a1a1aa', '#52525b'],
         });
       } catch {
         // Safe fallback
@@ -69,84 +69,70 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
     const text = `🏆 TEKKEN 7 TOURNAMENT RESULTS 🏆\n` +
       `🥇 Champion: ${championStandingsRow.name} (${championStandingsRow.fighter?.name || 'Fighter'})\n` +
       (runnerUpStandingsRow ? `🥈 Runner-Up: ${runnerUpStandingsRow.name} (${runnerUpStandingsRow.fighter?.name || 'Fighter'})\n` : '') +
-      `Format: Double Elimination Playoffs`;
+      `\nFormat: Double-Elimination Top 4 Playoffs`;
+
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const getPlayerDetails = (playerIndex: number | null) => {
-    if (playerIndex == null) return null;
-    const found = standings.find((s) => s.i === playerIndex);
+  const getPlayerDetails = (index: number | null) => {
+    if (index == null) return null;
+    const standing = standings.find((s) => s.i === index);
+    if (!standing) return null;
     return {
-      index: playerIndex,
-      name: found ? found.name : `Player ${playerIndex + 1}`,
-      fighter: found?.fighter || null,
+      index,
+      name: standing.name,
+      fighter: standing.fighter,
     };
   };
 
-  const hasAnyKnockoutResult = Object.values(koResults).some((v) => v !== null);
+  const hasAnyKnockoutResult = Object.values(koResults).some((val) => val != null);
 
-  // Flowchart canvas geometry
-  const CARD_W = 216;
-  const CARD_H = 126;
+  // Flowchart canvas layout geometry
   const CANVAS_W = 1040;
-  const CANVAS_H = 460;
+  const CANVAS_H = 430;
 
   const POSITIONS: Record<KnockoutMatchId, MatchPosition> = {
-    m1: { x: 20, y: 35, w: CARD_W, h: CARD_H },
-    m2: { x: 20, y: 275, w: CARD_W, h: CARD_H },
-    w: { x: 285, y: 65, w: CARD_W, h: CARD_H },
-    l: { x: 285, y: 275, w: CARD_W, h: CARD_H },
-    r: { x: 550, y: 185, w: CARD_W, h: CARD_H },
-    f: { x: 810, y: 125, w: CARD_W, h: CARD_H },
+    m1: { x: 20, y: 30, w: 220, h: 145 },
+    m2: { x: 20, y: 240, w: 220, h: 145 },
+    w: { x: 280, y: 70, w: 220, h: 145 },
+    l: { x: 280, y: 250, w: 220, h: 145 },
+    r: { x: 540, y: 200, w: 220, h: 145 },
+    f: { x: 800, y: 135, w: 220, h: 155 },
   };
 
-  // Exit point calculation on source card
-  const getExitPoint = (sourceId: KnockoutMatchId, type: 'w' | 'l') => {
-    const pos = POSITIONS[sourceId];
-    const match = ko[sourceId];
-    const p0 = match.players[0];
-    const p1 = match.players[1];
-    const winner = match.winner;
-
-    let slotY = pos.y + pos.h / 2;
-
-    if (winner !== null && p0 !== null && p1 !== null) {
-      if (type === 'w') {
-        slotY = winner === p0 ? pos.y + 50 : pos.y + 95;
-      } else {
-        slotY = winner === p0 ? pos.y + 95 : pos.y + 50;
-      }
-    } else {
-      slotY = type === 'w' ? pos.y + 50 : pos.y + 95;
-    }
-
-    return { x: pos.x + pos.w, y: slotY };
+  const getExitPoint = (matchId: KnockoutMatchId, type: 'w' | 'l') => {
+    const pos = POSITIONS[matchId];
+    return {
+      x: pos.x + pos.w,
+      y: type === 'w' ? pos.y + 44 : pos.y + 104,
+    };
   };
 
-  // Entry point calculation on destination card
-  const getEntryPoint = (targetId: KnockoutMatchId, slot: 0 | 1) => {
-    const pos = POSITIONS[targetId];
-    const slotY = slot === 0 ? pos.y + 50 : pos.y + 95;
-    return { x: pos.x, y: slotY };
+  const getEntryPoint = (matchId: KnockoutMatchId, slotIndex: 0 | 1) => {
+    const pos = POSITIONS[matchId];
+    return {
+      x: pos.x,
+      y: slotIndex === 0 ? pos.y + 44 : pos.y + 104,
+    };
   };
 
-  const CONNECTOR_LINKS: Array<{
+  const CONNECTOR_LINKS: {
     id: string;
     from: KnockoutMatchId;
     to: KnockoutMatchId;
     targetSlot: 0 | 1;
     type: 'w' | 'l';
     isActive: boolean;
-  }> = [
+  }[] = [
     { id: 'm1-w', from: 'm1', to: 'w', targetSlot: 0, type: 'w', isActive: ko.m1.winner !== null },
     { id: 'm2-w', from: 'm2', to: 'w', targetSlot: 1, type: 'w', isActive: ko.m2.winner !== null },
-    { id: 'm1-l', from: 'm1', to: 'l', targetSlot: 0, type: 'l', isActive: ko.m1.loser !== null },
-    { id: 'm2-l', from: 'm2', to: 'l', targetSlot: 1, type: 'l', isActive: ko.m2.loser !== null },
-    { id: 'l-r', from: 'l', to: 'r', targetSlot: 0, type: 'w', isActive: ko.l.winner !== null },
-    { id: 'w-r', from: 'w', to: 'r', targetSlot: 1, type: 'l', isActive: ko.w.loser !== null },
+    { id: 'm1-l', from: 'm1', to: 'l', targetSlot: 0, type: 'l', isActive: ko.m1.winner !== null },
+    { id: 'm2-l', from: 'm2', to: 'l', targetSlot: 1, type: 'l', isActive: ko.m2.winner !== null },
     { id: 'w-f', from: 'w', to: 'f', targetSlot: 0, type: 'w', isActive: ko.w.winner !== null },
+    { id: 'w-r', from: 'w', to: 'r', targetSlot: 0, type: 'l', isActive: ko.w.winner !== null },
+    { id: 'l-r', from: 'l', to: 'r', targetSlot: 1, type: 'w', isActive: ko.l.winner !== null },
     { id: 'r-f', from: 'r', to: 'f', targetSlot: 1, type: 'w', isActive: ko.r.winner !== null },
   ];
 
@@ -164,9 +150,9 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
 
     if (!details) {
       return (
-        <div className={`flex items-center justify-between px-2.5 py-1.5 rounded-md bg-[var(--surface2)] text-xs text-[var(--text-3)] select-none ${compact ? 'h-[36px]' : 'min-h-[48px]'}`}>
-          <span className="italic">TBD (Pending fixture)</span>
-          <span className="text-[9px] uppercase font-mono">Slot {slotIndex + 1}</span>
+        <div className={`flex items-center justify-between px-2.5 py-1.5 border border-[var(--border)] bg-[var(--surface2)] text-xs font-mono text-[var(--text-3)] select-none ${compact ? 'h-[36px]' : 'min-h-[46px]'}`}>
+          <span className="italic">TBD (PENDING)</span>
+          <span className="text-[9px] uppercase">SLOT {slotIndex + 1}</span>
         </div>
       );
     }
@@ -176,22 +162,22 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
         type="button"
         disabled={!isClickable}
         onClick={() => onSelectWinner(matchId, details.index)}
-        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all active:scale-[0.99] ${compact ? 'h-[36px]' : 'min-h-[48px]'} ${
+        className={`w-full flex items-center justify-between px-3 py-2 text-left transition-colors ${compact ? 'h-[36px]' : 'min-h-[46px]'} ${
           isWinner
-            ? 'bg-[var(--credit-bg)] text-[var(--text)] font-bold ring-2 ring-[var(--credit)] shadow-xs'
+            ? 'bg-white text-black border border-white font-bold'
             : isLoser
-            ? 'opacity-50 bg-[var(--surface2)] text-[var(--text-3)] line-through'
-            : 'bg-[var(--surface2)] hover:bg-[var(--surface3)] active:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border)]'
+            ? 'opacity-40 bg-[var(--surface2)] text-[var(--text-3)] line-through border border-[var(--border)]'
+            : 'bg-[var(--surface2)] hover:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border)]'
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <FighterAvatar fighter={details.fighter} name={details.name} size={compact ? 'xs' : 'sm'} />
           <div className="min-w-0">
-            <span className="block text-xs font-semibold truncate leading-tight">
+            <span className="block text-xs font-bold truncate leading-tight font-sans">
               {details.name}
             </span>
             {details.fighter && (
-              <span className="block text-[10px] text-[var(--text-3)] truncate leading-tight">
+              <span className="block text-[10px] text-[var(--text-3)] truncate leading-tight font-mono">
                 {details.fighter.name}
               </span>
             )}
@@ -199,12 +185,12 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
         </div>
 
         {isWinner ? (
-          <span className="text-[11px] font-bold text-[var(--credit)] ml-1 shrink-0 px-2 py-0.5 rounded bg-[var(--credit-bg)] border border-[var(--credit-border)] font-mono">
-            ADVANCED ✓
+          <span className="text-[10px] font-bold text-black ml-1 shrink-0 px-1.5 py-0.5 bg-white font-mono">
+            ADVANCED &check;
           </span>
         ) : !compact && winner === null ? (
           <span className="text-[10px] text-[var(--text-3)] ml-1 shrink-0 font-mono">
-            Tap to Advance →
+            ADVANCE &rarr;
           </span>
         ) : null}
       </button>
@@ -216,30 +202,6 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
     const match = ko[id];
     const pos = POSITIONS[id];
     const isFinal = id === 'f';
-    const isWinners = id === 'w';
-    const isLosers = id === 'l';
-    const isSecondChance = id === 'r';
-
-    let cardBg = 'bg-[var(--surface)] border border-[var(--border)]';
-    let titleColor = 'text-[var(--text)]';
-    let subtitleColor = 'text-[var(--text-3)]';
-
-    if (isFinal) {
-      cardBg = 'bg-[var(--surface)] border border-[var(--amber)] ring-1 ring-[var(--amber)] shadow-md';
-      titleColor = 'text-[var(--amber)] font-bold';
-      subtitleColor = 'text-[var(--amber)] font-semibold';
-    } else if (isWinners) {
-      cardBg = 'bg-[var(--surface)] border border-[var(--credit)]/50 ring-1 ring-[var(--credit)]/30';
-      titleColor = 'text-[var(--credit)]';
-      subtitleColor = 'text-[var(--credit)]';
-    } else if (isLosers) {
-      cardBg = 'bg-[var(--surface)] border border-[var(--debit)]/50 ring-1 ring-[var(--debit)]/30';
-      titleColor = 'text-[var(--debit)]';
-      subtitleColor = 'text-[var(--debit)]';
-    } else if (isSecondChance) {
-      cardBg = 'bg-[var(--surface)] border border-[var(--amber)]/50 ring-1 ring-[var(--amber)]/30';
-      titleColor = 'text-[var(--amber)]';
-    }
 
     return (
       <div
@@ -251,16 +213,21 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
           width: `${pos.w}px`,
           height: `${pos.h}px`,
         }}
-        className={`p-2.5 rounded-lg shadow-xs flex flex-col justify-between select-none z-10 transition-all ${cardBg}`}
+        className={`p-2.5 flex flex-col justify-between select-none z-10 transition-colors bg-[var(--surface)] border ${
+          isFinal ? 'border-white ring-1 ring-white/50' : 'border-[var(--border2)]'
+        }`}
       >
-        <div className="flex items-center justify-between gap-1.5 text-[11px] font-mono pb-1 border-b border-[var(--border)] mb-1">
-          <span className={`font-bold tracking-tight truncate ${titleColor}`}>
-            {isFinal && <Trophy className="w-3 h-3 inline mr-1 -mt-0.5 text-[var(--amber)]" />}
+        <div className="flex items-center justify-between gap-1.5 text-[10px] font-mono pb-1 border-b border-[var(--border)] mb-1 uppercase">
+          <span className="font-bold tracking-tight truncate text-[var(--ink-strong)]">
+            {isFinal && <Trophy className="w-3 h-3 inline mr-1 -mt-0.5" />}
             {match.title}
           </span>
-          <span className={`text-[10px] shrink-0 ${subtitleColor}`}>{match.subtitle}</span>
+          <span className="text-[9px] text-[var(--text-3)] shrink-0">
+            {id.toUpperCase()}
+          </span>
         </div>
-        <div className="space-y-1 mt-0.5">
+
+        <div className="space-y-1.5 flex-1 flex flex-col justify-center">
           {renderSlot(id, match.players[0], 0, match.winner, true)}
           {renderSlot(id, match.players[1], 1, match.winner, true)}
         </div>
@@ -268,7 +235,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
     );
   };
 
-  // Render stacked match card for list view
+  // Render match card in stacked List mode
   const renderListCard = (id: KnockoutMatchId) => {
     const match = ko[id];
     const isFinal = id === 'f';
@@ -276,22 +243,25 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
     return (
       <div
         key={id}
-        className={`p-3 rounded-lg bg-[var(--surface)] shadow-xs flex flex-col justify-between gap-2.5 transition-all border border-[var(--border)] ${
-          isFinal ? 'ring-1 ring-[var(--amber)]' : ''
+        className={`p-3.5 border bg-[var(--surface2)] space-y-3 ${
+          isFinal ? 'border-white' : 'border-[var(--border)]'
         }`}
       >
-        <div className="flex items-center justify-between gap-2 pb-1 text-xs border-b border-[var(--border)]">
-          <div className="flex items-center gap-1.5 font-display font-bold">
-            {isFinal && <Trophy className="w-4 h-4 text-[var(--amber)] inline shrink-0" />}
-            <span className="text-[var(--text)] text-sm">{match.title}</span>
-          </div>
-          <span className="text-[10px] text-[var(--text-3)] font-mono">
-            {match.subtitle}
+        <div className="flex items-center justify-between text-xs font-mono border-b border-[var(--border)] pb-2 uppercase">
+          <span className="font-bold text-[var(--ink-strong)] flex items-center gap-1.5">
+            {isFinal && <Trophy className="w-3.5 h-3.5 text-white" />}
+            <span>{match.title}</span>
+          </span>
+          <span className="text-[10px] text-[var(--text-3)]">
+            MATCH {id.toUpperCase()}
           </span>
         </div>
 
         <div className="space-y-2">
           {renderSlot(id, match.players[0], 0, match.winner, false)}
+          <div className="flex items-center justify-center -my-1">
+            <span className="text-[10px] font-mono text-[var(--text-3)]">VS</span>
+          </div>
           {renderSlot(id, match.players[1], 1, match.winner, false)}
         </div>
       </div>
@@ -299,276 +269,253 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-150">
-      {/* Tekken 7 Card Container */}
-      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-5 shadow-xl space-y-4">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--border)]/40">
-          <div>
+    <div className="space-y-6">
+      {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
+        {/* Section Header with Numbered Label */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
+              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
+                04 //
+              </span>
+              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
                 KNOCKOUT PLAYOFFS
-              </h3>
+              </h2>
               {!isRoundRobinComplete && (
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--amber-bg)] text-[#ffb703] font-mono font-bold border border-[var(--amber-border)]">
-                  Projected Seeds
+                <span className="text-[9px] px-1.5 py-0.5 border border-[var(--border2)] text-[var(--text-2)] font-mono uppercase tracking-widest">
+                  PROJECTED SEEDS
                 </span>
               )}
             </div>
-            <div className="text-xs text-[var(--text-3)] font-mono mt-0.5">
-              Double-elimination top 4 bracket · Tap winner to advance
-            </div>
+            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
+              SECTION 04 &mdash; DOUBLE-ELIMINATION TOP 4 BRACKET &middot; TAP WINNER TO ADVANCE
+            </p>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            {/* View Mode Toggle: Flowchart vs Cards */}
-            <div className="inline-flex items-center p-0.5 bg-[var(--surface2)] rounded-md border border-[var(--border)] text-xs font-semibold">
+            {/* View Mode Toggle: Flowchart vs List */}
+            <div className="inline-flex border border-[var(--border)] bg-[var(--surface2)] text-xs font-mono">
               <button
                 type="button"
                 onClick={() => setViewMode('flowchart')}
-                className={`px-2.5 py-1 rounded transition-all inline-flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 transition-colors inline-flex items-center gap-1.5 ${
                   viewMode === 'flowchart'
-                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
               >
                 <GitBranch className="w-3.5 h-3.5" />
-                <span>Flowchart</span>
+                <span>[01] FLOWCHART</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('cards')}
-                className={`px-2.5 py-1 rounded transition-all inline-flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 transition-colors border-l border-[var(--border)] inline-flex items-center gap-1.5 ${
                   viewMode === 'cards'
-                    ? 'bg-[#e51b24] text-white font-bold shadow-xs'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
                     : 'text-[var(--text-3)] hover:text-[var(--text)]'
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
-                <span>List</span>
+                <span>[02] LIST</span>
               </button>
             </div>
 
-          {hasAnyKnockoutResult && (
-            <button
-              onClick={onResetKnockout}
-              className="h-8 px-2.5 rounded-lg bg-[var(--surface)] text-xs font-medium text-[var(--text-2)] hover:text-[var(--debit)] hover:bg-[var(--debit-bg)] transition-colors inline-flex items-center gap-1"
-              title="Reset bracket results"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset</span>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Champion Crowning Celebration Banner */}
-      {championStandingsRow && (
-        <div className="p-4 sm:p-5 rounded-lg bg-gradient-to-br from-amber-500/15 via-[var(--surface)] to-red-500/15 border border-[var(--amber)] shadow-md animate-in zoom-in-95 duration-200">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-3.5">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-white shadow-md shrink-0">
-                <Trophy className="w-5 h-5 fill-white" />
-              </div>
-              <div>
-                <span className="text-[10px] uppercase font-extrabold tracking-widest text-[var(--amber)]">
-                  Tournament Champion
-                </span>
-                <h3 className="text-base sm:text-lg font-display font-extrabold text-[var(--text)]">
-                  {championStandingsRow.name}
-                </h3>
-                {championStandingsRow.fighter && (
-                  <p className="text-xs text-[var(--text-2)]">
-                    Fighter:{' '}
-                    <span className="font-semibold text-[var(--text)]">
-                      {championStandingsRow.fighter.name}
-                    </span>{' '}
-                    ({championStandingsRow.fighter.style || 'Martial Arts'})
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0">
-              {runnerUpStandingsRow && (
-                <div className="text-left sm:text-right">
-                  <span className="text-[10px] text-[var(--text-3)] block uppercase tracking-wider font-semibold">
-                    Runner-Up
-                  </span>
-                  <span className="text-xs font-bold text-[var(--text)]">
-                    {runnerUpStandingsRow.name}
-                  </span>
-                </div>
-              )}
+            {hasAnyKnockoutResult && (
               <button
-                onClick={handleCopyRecap}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] hover:bg-[var(--surface2)] shadow-xs transition-colors shrink-0"
+                onClick={onResetKnockout}
+                className="h-8 px-2.5 bg-[var(--surface2)] text-xs font-mono text-[var(--text-2)] hover:text-[var(--danger)] hover:border-[var(--danger)] border border-[var(--border)] transition-colors inline-flex items-center gap-1"
+                title="Reset bracket results"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[var(--credit)]" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copied' : 'Share Results'}</span>
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>RESET</span>
               </button>
-            </div>
+            )}
           </div>
         </div>
-      )}
 
-      {/* View Mode 1: Interactive Flowchart Diagram Canvas */}
-      {viewMode === 'flowchart' && (
-        <div className="p-3 sm:p-5 rounded-lg bg-[var(--surface)] border border-[var(--border)] shadow-xs">
-          {/* Mobile Horizontal Pan Hint */}
-          <div className="lg:hidden text-xs text-[var(--text-3)] flex items-center justify-between pb-2 mb-2">
-            <span>← Scroll horizontally to explore full bracket →</span>
-            <span className="font-mono text-[10px]">Interactive Flowchart</span>
+        {/* Champion Crowning Banner: Dark Swiss Brutalist Monochrome */}
+        {championStandingsRow && (
+          <div className="p-4 sm:p-5 bg-[var(--surface2)] border border-white space-y-3 font-mono">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 border border-white bg-white text-black flex items-center justify-center shrink-0">
+                  <Trophy className="w-5 h-5 fill-black" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-3)] block">
+                    TOURNAMENT CHAMPION
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-display font-black text-[var(--ink-strong)] uppercase tracking-tight">
+                    {championStandingsRow.name}
+                  </h3>
+                  {championStandingsRow.fighter && (
+                    <p className="text-xs text-[var(--text-2)]">
+                      FIGHTER: <span className="text-white font-bold">{championStandingsRow.fighter.name}</span> ({championStandingsRow.fighter.style})
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between sm:justify-end gap-4 pt-2 sm:pt-0">
+                {runnerUpStandingsRow && (
+                  <div className="text-left sm:text-right">
+                    <span className="text-[10px] text-[var(--text-3)] block uppercase tracking-wider">
+                      RUNNER-UP
+                    </span>
+                    <span className="text-xs font-bold text-[var(--ink-strong)]">
+                      {runnerUpStandingsRow.name}
+                    </span>
+                  </div>
+                )}
+                <button
+                  onClick={handleCopyRecap}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-white text-black hover:opacity-90 transition-opacity shrink-0"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copied ? 'COPIED' : 'COPY RECAP'}</span>
+                </button>
+              </div>
+            </div>
           </div>
+        )}
 
-          <div className="overflow-x-auto no-scrollbar">
-            {/* Stage Column Headers */}
-            <div className="min-w-[1040px] grid grid-cols-4 gap-6 pb-2 text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--text-3)] select-none">
-              <div className="pl-4">01 · Qualifiers</div>
-              <div className="pl-4">02 · Semis & Elimination</div>
-              <div className="pl-4">03 · Losers Final</div>
-              <div className="pl-4 text-[var(--amber)]">04 · Grand Final</div>
+        {/* View Mode 1: Interactive Flowchart Canvas with Clean Technical Connectors */}
+        {viewMode === 'flowchart' && (
+          <div className="p-3 sm:p-5 border border-[var(--border)] bg-[var(--bg)]">
+            {/* Mobile Scroll Instruction */}
+            <div className="lg:hidden text-xs font-mono text-[var(--text-3)] flex items-center justify-between pb-2 mb-2 border-b border-[var(--border)]">
+              <span>&larr; HORIZONTAL BRACKET PAN &rarr;</span>
+              <span className="text-[10px]">DIAGRAM VIEW</span>
             </div>
 
-            {/* Flowchart Diagram with SOLID SVG Connectors (Zero split lines) */}
-            <div
-              className="relative min-w-[1040px] select-none"
-              style={{ width: `${CANVAS_W}px`, height: `${CANVAS_H}px` }}
-            >
-              <svg
-                className="absolute inset-0 pointer-events-none"
-                width={CANVAS_W}
-                height={CANVAS_H}
-                aria-hidden="true"
+            <div className="overflow-x-auto no-scrollbar">
+              {/* Stage Column Headers */}
+              <div className="min-w-[1040px] grid grid-cols-4 gap-6 pb-2 text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--text-3)] select-none">
+                <div className="pl-4">01 · OPENING SEMIS</div>
+                <div className="pl-4">02 · ADVANCEMENT & LOWER</div>
+                <div className="pl-4">03 · LOWER FINAL</div>
+                <div className="pl-4 text-[var(--ink-strong)] font-black">04 · GRAND CHAMPIONSHIP</div>
+              </div>
+
+              {/* Diagram */}
+              <div
+                className="relative min-w-[1040px] select-none"
+                style={{ width: `${CANVAS_W}px`, height: `${CANVAS_H}px` }}
               >
-                {CONNECTOR_LINKS.map((link) => {
-                  const start = getExitPoint(link.from, link.type);
-                  const end = getEntryPoint(link.to, link.targetSlot);
-                  const midX = (start.x + end.x) / 2;
+                <svg
+                  className="absolute inset-0 pointer-events-none"
+                  width={CANVAS_W}
+                  height={CANVAS_H}
+                  aria-hidden="true"
+                >
+                  {CONNECTOR_LINKS.map((link) => {
+                    const start = getExitPoint(link.from, link.type);
+                    const end = getEntryPoint(link.to, link.targetSlot);
+                    const midX = (start.x + end.x) / 2;
 
-                  // Smooth continuous cubic bezier curve path
-                  const pathD = `M ${start.x} ${start.y} C ${midX} ${start.y}, ${midX} ${end.y}, ${end.x} ${end.y}`;
+                    const pathD = `M ${start.x} ${start.y} C ${midX} ${start.y}, ${midX} ${end.y}, ${end.x} ${end.y}`;
 
-                  const isWinner = link.type === 'w';
-                  const strokeColor = isWinner
-                    ? link.isActive
-                      ? 'var(--credit)'
-                      : 'rgba(46, 125, 50, 0.35)'
-                    : link.isActive
-                    ? 'var(--debit)'
-                    : 'rgba(211, 47, 47, 0.35)';
+                    const strokeColor = link.isActive
+                      ? '#ffffff'
+                      : 'rgba(255, 255, 255, 0.2)';
+                    const strokeWidth = link.isActive ? 2 : 1;
 
-                  const strokeWidth = link.isActive ? 2.5 : 1.75;
-
-                  return (
-                    <g key={link.id}>
-                      {/* Active line subtle glow - SOLID (no dashed/split line) */}
-                      {link.isActive && (
+                    return (
+                      <g key={link.id}>
                         <path
                           d={pathD}
                           fill="none"
-                          stroke={isWinner ? 'var(--credit)' : 'var(--debit)'}
-                          strokeWidth={5}
-                          strokeOpacity={0.25}
+                          stroke={strokeColor}
+                          strokeWidth={strokeWidth}
+                          strokeLinecap="square"
                         />
-                      )}
+                        <rect
+                          x={start.x - 2}
+                          y={start.y - 2}
+                          width={4}
+                          height={4}
+                          fill={strokeColor}
+                        />
+                        <rect
+                          x={end.x - 2}
+                          y={end.y - 2}
+                          width={4}
+                          height={4}
+                          fill={strokeColor}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
 
-                      {/* Main connection curve - SOLID (no dashed/split line) */}
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke={strokeColor}
-                        strokeWidth={strokeWidth}
-                        strokeLinecap="round"
-                        className="transition-all duration-200"
-                      />
-
-                      {/* Origin pin */}
-                      <circle
-                        cx={start.x}
-                        cy={start.y}
-                        r={link.isActive ? 3.5 : 2.5}
-                        fill={strokeColor}
-                      />
-
-                      {/* Destination pin */}
-                      <circle
-                        cx={end.x}
-                        cy={end.y}
-                        r={link.isActive ? 3.5 : 2.5}
-                        fill={strokeColor}
-                      />
-                    </g>
-                  );
-                })}
-              </svg>
-
-              {/* Render All 6 Match Cards in Diagram Layout */}
-              {(['m1', 'm2', 'w', 'l', 'r', 'f'] as KnockoutMatchId[]).map((id) =>
-                renderFlowchartCard(id)
-              )}
-            </div>
-
-            {/* Flowchart Legend (SOLID continuous lines, zero split lines) */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-3 text-xs text-[var(--text-3)]">
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="flex items-center gap-2">
-                  <span className="w-5 h-1 bg-[var(--credit)] inline-block rounded-full"></span>
-                  <span>Winner Advancement</span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="w-5 h-1 bg-[var(--debit)] inline-block rounded-full"></span>
-                  <span>Second Chance Drop-down</span>
-                </span>
+                {/* Render All 6 Match Cards in Diagram Layout */}
+                {(['m1', 'm2', 'w', 'l', 'r', 'f'] as KnockoutMatchId[]).map((id) =>
+                  renderFlowchartCard(id)
+                )}
               </div>
-              <span className="text-[11px]">Tap any player slot to advance them through the bracket.</span>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* View Mode 2: Responsive Stacked Stages */}
-      {viewMode === 'cards' && (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-3)] px-1">
-              Stage 1 · Opening Semifinals
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {renderListCard('m1')}
-              {renderListCard('m2')}
+              {/* Flowchart Legend */}
+              <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-3 text-xs font-mono text-[var(--text-3)] border-t border-[var(--border)]">
+                <div className="flex flex-wrap items-center gap-4">
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-[2px] bg-white inline-block"></span>
+                    <span>ADVANCEMENT PATH</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-[1px] bg-white/40 inline-block"></span>
+                    <span>POTENTIAL PATHWAY</span>
+                  </span>
+                </div>
+                <span className="text-[11px]">CLICK COMPETITOR TO ADVANCE WINNER</span>
+              </div>
             </div>
           </div>
+        )}
 
-          <div className="space-y-2">
-            <div className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-3)] px-1">
-              Stage 2 · Winners & Losers Match
+        {/* View Mode 2: Responsive Stacked Stages */}
+        {viewMode === 'cards' && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-3)] px-1">
+                STAGE 01 // OPENING SEMIFINALS
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {renderListCard('m1')}
+                {renderListCard('m2')}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {renderListCard('w')}
-              {renderListCard('l')}
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            <div className="text-xs font-display font-bold uppercase tracking-wider text-[var(--amber)] px-1">
-              Stage 3 · Losers Final (Second Chance)
+            <div className="space-y-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-3)] px-1">
+                STAGE 02 // WINNERS & LOWER BRACKET
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {renderListCard('w')}
+                {renderListCard('l')}
+              </div>
             </div>
-            <div className="max-w-xl">
-              {renderListCard('r')}
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            <div className="text-xs font-display font-bold uppercase tracking-wider text-[var(--amber)] px-1">
-              Stage 4 · Grand Championship Final
+            <div className="space-y-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-3)] px-1">
+                STAGE 03 // LOWER FINAL (SECOND CHANCE)
+              </div>
+              <div className="max-w-xl">
+                {renderListCard('r')}
+              </div>
             </div>
-            <div className="max-w-xl">
-              {renderListCard('f')}
+
+            <div className="space-y-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-[var(--ink-strong)] px-1 font-bold">
+                STAGE 04 // GRAND CHAMPIONSHIP FINAL
+              </div>
+              <div className="max-w-xl">
+                {renderListCard('f')}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

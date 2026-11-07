@@ -25,78 +25,70 @@ export const Navbar: React.FC<NavbarProps> = ({
   championName,
   format = 'double',
 }) => {
-  const tabs: { id: ActiveTab; label: string }[] = [
-    { id: 'players', label: 'Players' },
-    { id: 'rules', label: 'Rules' },
-    { id: 'table', label: 'Points table' },
-    { id: 'matches', label: 'Round robin' },
-    { id: 'knockout', label: 'Knockout' },
+  const tabs: { id: ActiveTab; num: string; label: string }[] = [
+    { id: 'players', num: '01', label: 'ROSTER' },
+    { id: 'rules', num: '02', label: 'PROTOCOL' },
+    { id: 'table', num: '03', label: 'STANDINGS' },
+    { id: 'matches', num: '04', label: 'MATCHES' },
+    { id: 'knockout', num: '05', label: 'PLAYOFFS' },
   ];
 
-  const formatText =
-    format === 'single'
-      ? `Single round robin for ${playerCount} players, then a top-4 knockout with a second chance.`
-      : `Double round robin for ${playerCount} players, then a top-4 knockout with a second chance.`;
-
   return (
-    <header className="w-full pt-3 sm:pt-6 pb-2 transition-colors">
+    <header className="w-full pt-4 sm:pt-6 pb-2 border-b border-[var(--border)] transition-colors select-none">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Top Branding Section matching Tekken 7 Screenshot */}
-        <div className="flex items-center sm:items-start justify-between gap-3 mb-2 sm:mb-4">
-          <div className="space-y-1 select-none min-w-0">
-            {/* TEKKEN 7 Logo */}
-            <div className="flex items-baseline gap-2">
-              <span className="font-display font-black italic text-2xl sm:text-4xl text-[var(--text)] tracking-wider">
-                TEKKEN
+        {/* Top Minimalist Tech Header */}
+        <div className="flex items-center justify-between gap-4 pb-4">
+          <div className="space-y-1.5 min-w-0">
+            {/* Swiss Brutalist Title */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="font-display font-black text-2xl sm:text-3xl text-[var(--ink-strong)] tracking-tighter uppercase">
+                TEKKEN 7
               </span>
-              <span className="font-display font-black italic text-3xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-br from-yellow-300 via-orange-500 to-[#e51b24] drop-shadow-[0_0_16px_rgba(229,27,36,0.65)] leading-none">
-                7
+              <span className="font-mono text-[10px] sm:text-xs uppercase px-1.5 py-0.5 border border-[var(--border2)] text-[var(--text)] tracking-widest">
+                TOURNAMENT ENGINE
               </span>
-              <span className="inline-block bg-[#e51b24] text-white font-display font-black italic text-[10px] sm:text-xs uppercase px-2 sm:px-3 py-0.5 tracking-wider -skew-x-12 shadow-[0_0_12px_rgba(229,27,36,0.5)] ml-1">
-                HOME TOURNAMENT
+              <span className="font-mono text-[10px] text-[var(--text-3)] uppercase tracking-wider hidden sm:inline">
+                BUILD 7.0
               </span>
             </div>
 
-            {/* Desktop Subtitle */}
-            <p className="hidden sm:block text-xs sm:text-sm text-[var(--text-3)] font-sans max-w-2xl leading-relaxed pt-0.5">
-              {formatText}
-            </p>
-
-            {/* Mobile Tournament Badge Info */}
-            <div className="flex sm:hidden items-center gap-2 text-[11px] text-[var(--text-3)] font-mono">
-              <span>{playerCount} Fighters</span>
-              <span>·</span>
-              <span>{format === 'single' ? 'Single RR' : 'Double RR'}</span>
+            {/* Editorial Metadata Stream */}
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-3)] font-mono tracking-wide">
+              <span>{playerCount} COMPETITORS</span>
+              <span className="text-[var(--border2)]">/</span>
+              <span>{completedMatches} OF {totalMatches} FIXTURES</span>
+              <span className="text-[var(--border2)]">/</span>
+              <span className="uppercase">{format === 'single' ? 'SINGLE ROUND-ROBIN' : 'DOUBLE ROUND-ROBIN'}</span>
               {championName && (
                 <>
-                  <span>·</span>
-                  <span className="text-[var(--amber)] font-bold">🏆 {championName}</span>
+                  <span className="text-[var(--border2)]">/</span>
+                  <span className="text-[var(--ink-strong)] font-bold">CHAMPION: {championName.toUpperCase()}</span>
                 </>
               )}
             </div>
           </div>
 
-          {/* Theme Toggle Button */}
+          {/* Theme Switcher: Sharp Square Box */}
           <div className="shrink-0 flex items-center gap-2">
             <button
               onClick={onToggleTheme}
-              className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg sm:rounded-md border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface2)] active:scale-95 flex items-center justify-center text-[var(--text-2)] hover:text-[var(--text)] transition-all shadow-xs"
-              title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              className="w-9 h-9 border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface2)] active:scale-95 flex items-center justify-center text-[var(--text-2)] hover:text-[var(--text)] transition-colors"
+              title={isDark ? 'Switch to Light' : 'Switch to Dark'}
               aria-label="Toggle theme"
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-[#ffb703]" />
+                <Sun className="w-4 h-4 text-[var(--ink-strong)]" />
               ) : (
-                <Moon className="w-4 h-4 text-zinc-700" />
+                <Moon className="w-4 h-4 text-[var(--text)]" />
               )}
             </button>
           </div>
         </div>
 
-        {/* Tab Bar matching Tekken 7 Screenshot (Desktop only - Mobile uses bottom nav) */}
+        {/* Numbered Editorial Tab Bar (Desktop) */}
         <nav
           aria-label="Tournament Navigation"
-          className="hidden md:flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar pt-1 select-none"
+          className="hidden md:flex items-center gap-0 overflow-x-auto no-scrollbar pt-1 select-none border-t border-[var(--border)]"
         >
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -105,12 +97,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => onTabChange(tab.id)}
-                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-display italic tracking-wide transition-all whitespace-nowrap rounded-t-xs sm:rounded-t-sm shrink-0 ${
+                className={`px-4 py-2 text-xs font-mono tracking-wider transition-colors shrink-0 border-r border-[var(--border)] flex items-center gap-2 ${
                   isActive
-                    ? 'bg-[#e51b24] text-white font-black shadow-[0_0_14px_rgba(229,27,36,0.55)] border-b-[3px] border-[#ffb703]'
-                    : 'bg-[var(--surface)] text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface2)] border border-[var(--border)] border-b-transparent font-bold'
+                    ? 'bg-[var(--accent)] text-[var(--accent-contrast)] font-bold'
+                    : 'bg-transparent text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface2)]'
                 }`}
               >
+                <span className={isActive ? 'opacity-70' : 'text-[var(--text-3)]'}>[{tab.num}]</span>
                 <span>{tab.label}</span>
               </button>
             );
@@ -120,4 +113,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
-

@@ -18,95 +18,112 @@ export const RulesTab: React.FC<RulesTabProps> = ({ playerCount, format = 'doubl
 
   const rules = [
     {
-      title: 'Match Format',
+      num: '01',
+      title: 'MATCH FORMAT (BEST OF 3)',
       icon: Flame,
-      color: 'text-[var(--debit)]',
-      content: 'First to 2 rounds (Best of 3 rounds) wins the match fixture. 60 seconds round timer on standard Tekken 7 settings.',
+      content: 'First to 2 rounds (Best of 3 rounds) wins the match fixture. Standard 60 seconds round timer on competitive Tekken 7 tournament regulations.',
     },
     {
-      title: 'Points System',
+      num: '02',
+      title: 'POINTS ALLOCATION MATRIX',
       icon: Trophy,
-      color: 'text-[var(--amber)]',
       content: (
-        <div className="space-y-1 text-xs text-[var(--text-2)]">
-          <div className="flex items-center justify-between">
-            <span>2–0 Sweep:</span>
-            <span className="font-bold text-[var(--credit)]">+3 Pts</span>
+        <div className="space-y-1.5 text-xs font-mono">
+          <div className="flex items-center justify-between border-b border-[var(--border)] pb-1">
+            <span>2–0 CLEAN SWEEP:</span>
+            <span className="font-bold text-white">+3 PTS</span>
+          </div>
+          <div className="flex items-center justify-between border-b border-[var(--border)] pb-1">
+            <span>2–1 DECISIVE WIN:</span>
+            <span className="font-bold text-white">+2 PTS</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>2–1 Close Win:</span>
-            <span className="font-bold text-[var(--amber)]">+2 Pts</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Match Loss:</span>
-            <span className="font-medium text-[var(--text-3)]">0 Pts</span>
+            <span>MATCH LOSS:</span>
+            <span className="text-[var(--text-3)]">0 PTS</span>
           </div>
         </div>
       ),
     },
     {
-      title: isSingle ? 'Single Round Robin' : 'Double Round Robin',
+      num: '03',
+      title: isSingle ? 'SINGLE ROUND-ROBIN' : 'DOUBLE ROUND-ROBIN',
       icon: Scale,
-      color: 'text-[var(--credit)]',
       content: isSingle
-        ? `Each competitor plays every rival once (${totalMatches} total fixtures across ${totalRounds} rounds).`
+        ? `Each competitor faces every rival once (${totalMatches} total fixtures across ${totalRounds} rounds). Direct head-to-head qualification.`
         : `Each competitor plays every rival twice across Leg 1 and Leg 2 (${totalMatches} total fixtures across ${totalRounds} rounds).`,
     },
     {
-      title: 'Tie-Breakers',
+      num: '04',
+      title: 'TIE-BREAKER PROTOCOL',
       icon: ShieldCheck,
-      color: 'text-[var(--text)]',
       content: (
-        <ol className="list-decimal list-inside space-y-0.5 text-xs text-[var(--text-2)]">
+        <ol className="list-decimal list-inside space-y-1 text-xs font-mono text-[var(--text-2)]">
           <li>Championship Points (PTS)</li>
-          <li>Match Victories (W)</li>
-          <li>Round Difference (RD)</li>
-          <li>Head-to-head record</li>
+          <li>Total Match Victories (W)</li>
+          <li>Round Difference (DIFF)</li>
+          <li>Head-to-head record between tied competitors</li>
         </ol>
       ),
     },
     {
-      title: 'Playoff Double-Elimination',
+      num: '05',
+      title: 'DOUBLE-ELIMINATION PLAYOFFS',
       icon: GitBranch,
-      color: 'text-[var(--amber)]',
-      content: 'Top 4 seeds qualify. Semifinal losers enter the lower bracket for a second chance to reach the Grand Final.',
+      content: 'Top 4 seeds advance to the championship bracket. Semifinal losers enter the lower bracket for a second chance to contest the Grand Final.',
     },
   ];
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-150">
-      {/* Tekken 7 Card Container */}
-      <div className="bg-[var(--surface)] border border-[var(--border)] border-t-[3px] border-t-[#e51b24] rounded-lg p-4 sm:p-5 shadow-xl space-y-4">
-        <div className="pb-2 border-b border-[var(--border)]/40">
-          <h3 className="font-display font-black italic tracking-wider text-[#ffb703] uppercase text-base sm:text-lg">
-            RULES
-          </h3>
-          <div className="text-xs text-[var(--text-3)] font-mono mt-0.5">
-            Standard rules for {isSingle ? 'single round-robin' : 'double round-robin'} scoring and double-elimination playoffs
+    <div className="space-y-6">
+      {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
+                05 //
+              </span>
+              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
+                TOURNAMENT PROTOCOL
+              </h2>
+            </div>
+            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
+              SECTION 05 &mdash; COMPETITIVE REGULATIONS &middot; SCORING ARCHITECTURE &middot; TIEBREAK RULES
+            </p>
+          </div>
+
+          <div className="text-xs font-mono text-[var(--text-3)] uppercase tracking-wider">
+            {isSingle ? 'SINGLE ROUND RULES' : 'DOUBLE ROUND RULES'}
           </div>
         </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {rules.map((rule, idx) => {
-          const Icon = rule.icon;
-          return (
-            <div
-              key={idx}
-              className="p-3.5 rounded-lg bg-[var(--surface)] space-y-2 border border-[var(--border)]"
-            >
-              <div className="flex items-center gap-2">
-                <Icon className={`w-4 h-4 ${rule.color}`} />
-                <h3 className="font-display font-bold text-sm text-[var(--text)]">
-                  {rule.title}
-                </h3>
+        {/* Numbered Rules Editorial Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {rules.map((rule) => {
+            const Icon = rule.icon;
+            return (
+              <div
+                key={rule.num}
+                className="p-4 bg-[var(--surface2)] border border-[var(--border)] space-y-3 font-mono"
+              >
+                <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+                  <div className="flex items-center gap-2">
+                    <Icon className="w-4 h-4 text-white" />
+                    <h3 className="font-bold text-xs text-[var(--ink-strong)] tracking-wider">
+                      {rule.title}
+                    </h3>
+                  </div>
+                  <span className="text-[10px] text-[var(--text-3)]">
+                    RULE.{rule.num}
+                  </span>
+                </div>
+                <div className="text-xs text-[var(--text-2)] leading-relaxed">
+                  {rule.content}
+                </div>
               </div>
-              <div className="text-xs text-[var(--text-2)] leading-relaxed">
-                {rule.content}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

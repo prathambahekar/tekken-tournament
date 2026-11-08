@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab } from '../types';
-import { Users, BookOpen, Trophy, Swords, GitBranch } from 'lucide-react';
+import { Users, Trophy, Swords, GitBranch } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeTab: ActiveTab;
@@ -23,13 +23,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     label: string;
     icon: React.ComponentType<{ className?: string }>;
     badge?: string | boolean;
-  }[] = [
+  }[  ] = [
     { id: 'players', num: '01', label: 'Roster', icon: Users },
-    { id: 'rules', num: '02', label: 'Rules', icon: BookOpen },
-    { id: 'table', num: '03', label: 'Table', icon: Trophy },
+    { id: 'table', num: '02', label: 'Table', icon: Trophy },
     {
       id: 'matches',
-      num: '04',
+      num: '03',
       label: 'Matches',
       icon: Swords,
       badge:
@@ -39,7 +38,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     },
     {
       id: 'knockout',
-      num: '05',
+      num: '04',
       label: 'Playoffs',
       icon: GitBranch,
       badge: hasChampion ? 'WIN' : undefined,
@@ -51,7 +50,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
       aria-label="Mobile Bottom Navigation"
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg)]/95 backdrop-blur-md border-t border-[var(--border)] pb-safe select-none"
     >
-      <div className="grid grid-cols-5 h-16 items-center divide-x divide-[var(--border)]">
+      <div className="grid grid-cols-4 h-16 items-center divide-x divide-[var(--border)]">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const Icon = tab.icon;
@@ -91,9 +90,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               </div>
 
               {/* Minimalist Tech Label with Number */}
-              <span className="text-[10px] font-mono tracking-wider mt-1 leading-tight flex items-center gap-0.5">
-                <span className="opacity-60">{tab.num}.</span>
-                <span className={isActive ? 'font-bold' : ''}>{tab.label}</span>
+              <span className={`text-[10px] font-mono tracking-wider mt-1 leading-tight ${isActive ? 'font-bold' : ''}`}>
+                {tab.label}
               </span>
             </button>
           );

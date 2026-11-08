@@ -66,18 +66,13 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
       {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
       <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
         {/* Section Header with Numbered Label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
-                02 //
-              </span>
-              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
-                TOURNAMENT STANDINGS
-              </h2>
-            </div>
-            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
-              SECTION 02 &mdash; {playedMatches} OF {totalMatches} FIXTURES COMPLETED &middot; {isSingle ? 'SINGLE' : 'DOUBLE'} ROUND-ROBIN
+            <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)]">
+              Standings
+            </h2>
+            <p className="text-xs text-[var(--text-3)]">
+              {playedMatches} of {totalMatches} matches completed · {isSingle ? 'Everyone plays once' : 'Everyone plays twice'}
             </p>
           </div>
 
@@ -93,7 +88,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
               }`}
             >
               <ListOrdered className="w-3.5 h-3.5" />
-              <span>[01] LEADERBOARD</span>
+              <span>List</span>
             </button>
             <button
               type="button"
@@ -105,7 +100,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
-              <span>[02] CROSS MATRIX</span>
+              <span>Match grid</span>
             </button>
           </div>
         </div>
@@ -233,8 +228,8 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
 
                       {/* Playoff Cutoff Indicator on Mobile */}
                       {isCutoff && standings.length > 4 && (
-                        <div className="py-1 px-3 border border-dashed border-[var(--border2)] text-center text-[10px] font-mono uppercase tracking-widest text-[var(--text-2)]">
-                          --- TOP 4 ADVANCE TO PLAYOFFS ---
+                        <div className="py-1 px-3 border border-dashed border-[var(--accent-border-soft)] bg-[var(--accent-soft)] text-center text-[10px] font-mono uppercase tracking-widest text-[var(--accent-ink)]">
+                          Top 4 advance to playoffs · Below this line, players do not qualify
                         </div>
                       )}
                     </React.Fragment>
@@ -256,7 +251,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                   <thead>
                     <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-xs font-mono text-[var(--text-3)] uppercase select-none tracking-wider">
                       <th className="py-2.5 px-3 text-center w-12 border-r border-[var(--border)]">#</th>
-                      <th className="py-2.5 px-3 border-r border-[var(--border)]">COMPETITOR</th>
+                      <th className="py-2.5 px-3 border-r border-[var(--border)]">PLAYER</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Played">P</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Wins">W</th>
                       <th className="py-2.5 px-2 text-center border-r border-[var(--border)]" title="Losses">L</th>
@@ -337,10 +332,10 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
 
                           {/* Playoff cutoff banner */}
                           {isCutoff && standings.length > 4 && (
-                            <tr className="border-y border-[var(--border2)]">
+                            <tr className="border-y border-[var(--accent-border-soft)]">
                               <td colSpan={7} className="p-0">
-                                <div className="px-4 py-1.5 bg-[var(--surface3)] text-[10px] font-mono text-[var(--ink-strong)] uppercase tracking-widest text-center">
-                                  --- ADVANCE TO PLAYOFF BRACKET (TOP 4 SEEDS) ---
+                                <div className="px-4 py-1.5 bg-[var(--accent-soft)] text-[10px] font-mono text-[var(--accent-ink)] uppercase tracking-widest text-center">
+                                  Top 4 advance to playoffs · Below this line, players do not qualify
                                 </div>
                               </td>
                             </tr>
@@ -412,7 +407,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                 {/* Player Selector Pills */}
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-mono text-[var(--text-3)] uppercase tracking-wider block">
-                    SELECT COMPETITOR:
+                    SELECT PLAYER:
                   </span>
                   <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
                     {standings.map((p, idx) => {
@@ -509,8 +504,8 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                                 <span
                                   className={`px-2 py-0.5 border font-bold text-[11px] ${
                                     leg1.win
-                                      ? 'border-[var(--ink-strong)] bg-white text-black'
-                                      : 'border-[var(--border)] text-[var(--text-3)]'
+                                      ? 'border-[var(--win-border)] bg-[var(--win-bg)] text-[var(--win)]'
+                                      : 'border-[var(--loss-border)] bg-[var(--loss-bg)] text-[var(--loss)]'
                                   }`}
                                 >
                                   {leg1.win ? 'WON' : 'LOST'} {leg1.score}
@@ -528,8 +523,8 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                                   <span
                                     className={`px-2 py-0.5 border font-bold text-[11px] ${
                                       leg2.win
-                                        ? 'border-[var(--ink-strong)] bg-white text-black'
-                                        : 'border-[var(--border)] text-[var(--text-3)]'
+                                      ? 'border-[var(--win-border)] bg-[var(--win-bg)] text-[var(--win)]'
+                                      : 'border-[var(--loss-border)] bg-[var(--loss-bg)] text-[var(--loss)]'
                                     }`}
                                   >
                                     {leg2.win ? 'WON' : 'LOST'} {leg2.score}
@@ -589,7 +584,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                             <td key={col.i} className="p-0.5 border-r border-[var(--border)] text-[9px] leading-tight">
                               <div className="flex flex-col items-center justify-center gap-0.5">
                                 {m1?.played ? (
-                                  <span className={`w-full py-0.5 font-bold ${m1.win ? 'bg-white text-black' : 'text-[var(--text-3)]'}`}>
+                                  <span className={`w-full py-0.5 font-bold border ${m1.win ? 'bg-[var(--win-bg)] text-[var(--win)] border-[var(--win-border)]' : 'bg-[var(--loss-bg)] text-[var(--loss)] border-[var(--loss-border)]'}`}>
                                     {m1.score.replace('–', '')}
                                   </span>
                                 ) : (
@@ -597,7 +592,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                                 )}
                                 {!isSingle && (
                                   m2?.played ? (
-                                    <span className={`w-full py-0.5 font-bold ${m2.win ? 'bg-white text-black' : 'text-[var(--text-3)]'}`}>
+                                    <span className={`w-full py-0.5 font-bold border ${m2.win ? 'bg-[var(--win-bg)] text-[var(--win)] border-[var(--win-border)]' : 'bg-[var(--loss-bg)] text-[var(--loss)] border-[var(--loss-border)]'}`}>
                                       {m2.score.replace('–', '')}
                                     </span>
                                   ) : (
@@ -626,7 +621,7 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                   <thead>
                     <tr className="border-b border-[var(--border)] bg-[var(--surface2)] text-[var(--text-3)] uppercase select-none tracking-wider text-[11px]">
                       <th className="py-2.5 px-3 text-left font-bold sticky left-0 bg-[var(--surface2)] z-20 min-w-[140px] sm:min-w-[160px] border-r border-[var(--border)]">
-                        COMPETITOR
+                        PLAYER
                       </th>
                       {standings.map((colPlayer, idx) => (
                         <th
@@ -692,8 +687,8 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                                   <span
                                     className={`px-1.5 py-0.5 text-[10px] font-bold border ${
                                       m1.win
-                                        ? 'bg-white text-black border-white'
-                                        : 'text-[var(--text-3)] border-[var(--border)]'
+                                        ? 'bg-[var(--win-bg)] text-[var(--win)] border-[var(--win-border)]'
+                                        : 'bg-[var(--loss-bg)] text-[var(--loss)] border-[var(--loss-border)]'
                                     }`}
                                   >
                                     {m1.score}
@@ -707,8 +702,8 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
                                     <span
                                       className={`px-1.5 py-0.5 text-[10px] font-bold border ${
                                         m2.win
-                                          ? 'bg-white text-black border-white'
-                                          : 'text-[var(--text-3)] border-[var(--border)]'
+                                          ? 'bg-[var(--win-bg)] text-[var(--win)] border-[var(--win-border)]'
+                                          : 'bg-[var(--loss-bg)] text-[var(--loss)] border-[var(--loss-border)]'
                                       }`}
                                     >
                                       {m2.score}
@@ -739,8 +734,12 @@ export const PointsTableTab: React.FC<PointsTableTabProps> = ({
               <div className="px-4 py-3 border-t border-[var(--border)] bg-[var(--surface2)] text-[11px] font-mono text-[var(--text-3)] flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5">
-                    <span className="px-1 py-0.2 bg-white text-black text-[9px] font-bold">WIN</span>
+                    <span className="px-1 py-0.2 border border-[var(--win-border)] bg-[var(--win-bg)] text-[var(--win)] text-[9px] font-bold">WIN</span>
                     <span>Direct Leg Victory</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="px-1 py-0.2 border border-[var(--loss-border)] bg-[var(--loss-bg)] text-[var(--loss)] text-[9px] font-bold">LOSS</span>
+                    <span>Direct Leg Loss</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <span className="text-[var(--text-3)] font-mono">—</span>

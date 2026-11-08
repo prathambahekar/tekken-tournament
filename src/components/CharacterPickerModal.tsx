@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ROSTER } from '../data/roster';
 import { Fighter } from '../types';
-import { FighterAvatar } from './FighterAvatar';
 import { Search, X } from 'lucide-react';
 
 interface CharacterPickerModalProps {
@@ -66,7 +65,7 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
         {/* Header with Technical Title */}
         <div className="flex items-center justify-between px-4 py-3 bg-[var(--surface2)] border-b border-[var(--border)] shrink-0">
           <div className="text-xs font-bold uppercase tracking-wider text-[var(--ink-strong)]">
-            ASSIGN FIGHTER // <span className="text-white underline">{playerName}</span>
+            Choose a fighter for <span className="text-white underline">{playerName}</span>
           </div>
           <button
             onClick={onClose}
@@ -92,7 +91,7 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                   onClose();
                 }
               }}
-              placeholder="SEARCH FIGHTER (E.G. JIN, KAZUYA, EDDY)..."
+              placeholder="Search fighters..."
               className="w-full pl-9 pr-8 py-2 text-xs uppercase bg-[var(--bg)] border border-[var(--border)] text-[var(--ink-strong)] placeholder-[var(--text-3)] focus:outline-none focus:border-white transition-colors"
             />
             {query && (
@@ -118,17 +117,14 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                 onSelect(null);
                 onClose();
               }}
-              className={`flex items-center gap-2.5 p-2 border text-left transition-colors min-h-[46px] ${
+              className={`flex items-center p-2 border text-left transition-colors min-h-[42px] ${
                 currentFighterId === null
                   ? 'border-white bg-white text-black font-bold'
                   : 'border-[var(--border)] bg-[var(--surface2)] text-[var(--text-3)] hover:text-white hover:bg-[var(--surface3)]'
               }`}
             >
-              <span className="w-7 h-7 bg-[var(--bg)] border border-[var(--border)] flex items-center justify-center font-mono text-xs text-[var(--text-2)] shrink-0">
-                ✕
-              </span>
               <span className="text-xs font-bold uppercase truncate">
-                NO FIGHTER
+                No fighter
               </span>
             </button>
           )}
@@ -143,35 +139,29 @@ export const CharacterPickerModal: React.FC<CharacterPickerModalProps> = ({
                   onSelect(f.id);
                   onClose();
                 }}
-                className={`flex items-center gap-2.5 p-2 border text-left transition-colors min-h-[46px] ${
+                className={`flex items-center p-2 border text-left transition-colors min-h-[42px] ${
                   isSelected
                     ? 'border-white bg-white text-black font-bold'
                     : 'border-[var(--border)] bg-[var(--surface2)] hover:bg-[var(--surface3)] hover:border-[var(--border2)] text-[var(--text)]'
                 }`}
               >
-                <FighterAvatar fighter={f} size="sm" />
-                <div className="min-w-0">
-                  <span className="text-xs font-bold uppercase truncate block leading-tight">
-                    {f.name}
-                  </span>
-                  <span className="text-[10px] opacity-70 truncate block leading-tight font-sans">
-                    {f.style}
-                  </span>
-                </div>
+                <span className="text-xs font-bold uppercase truncate block leading-tight">
+                  {f.name}
+                </span>
               </button>
             );
           })}
 
           {filteredFighters.length === 0 && (
             <div className="col-span-full py-8 text-center text-xs text-[var(--text-3)] font-mono">
-              NO FIGHTER FOUND FOR "{query}".
+              No fighters found for "{query}".
             </div>
           )}
         </div>
 
         {/* Minimal Footer */}
         <div className="px-4 py-2.5 border-t border-[var(--border)] bg-[var(--surface2)] flex items-center justify-between text-xs text-[var(--text-3)] shrink-0 font-mono">
-          <span>{filteredFighters.length} ROSTER ENTRIES</span>
+          <span>{filteredFighters.length} fighters</span>
           <button
             onClick={onClose}
             className="px-3 py-1 text-xs uppercase bg-[var(--surface)] hover:bg-[var(--surface3)] border border-[var(--border)] text-[var(--text-2)] hover:text-white transition-colors"

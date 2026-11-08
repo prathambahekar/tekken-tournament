@@ -198,7 +198,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           <div className="flex items-center gap-2">
             <Upload className="w-4 h-4 text-white" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink-strong)]">
-              IMPORT TOURNAMENT DATABASE
+              Import tournament
             </h3>
           </div>
           <button
@@ -215,7 +215,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           <div className="p-3 bg-[var(--surface2)] border border-[var(--border)] flex items-center justify-between gap-3 text-xs">
             <div>
               <span className="font-bold text-[var(--ink-strong)] block uppercase">
-                LOAD PRESET ARCHIVE
+                Load example
               </span>
               <span className="text-[var(--text-3)] text-[11px]">
                 Pius, Hrishi, Ritu... (42 matches & playoffs)
@@ -227,7 +227,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               className="px-3 py-1.5 bg-white text-black font-bold uppercase tracking-wider text-xs hover:opacity-90 inline-flex items-center gap-1.5 shrink-0"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>LOAD PRESET</span>
+              <span>Use example</span>
             </button>
           </div>
 
@@ -240,7 +240,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           >
             <Upload className="w-5 h-5 mx-auto text-[var(--text-3)]" />
             <div className="text-xs text-[var(--text-2)] uppercase">
-              <span className="font-bold text-white">SELECT JSON FILE</span> OR DRAG & DROP
+              <span className="font-bold text-white">Choose a file</span> or drag it here
             </div>
             <input
               ref={fileInputRef}
@@ -290,7 +290,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               </div>
               <div className="space-y-1 text-[var(--text-2)] text-[11px]">
                 <div>
-                  <span className="text-white font-bold">{preview.names.length} COMPETITORS:</span>{' '}
+                  <span className="text-white font-bold">{preview.names.length} players:</span>{' '}
                   {preview.names.join(', ')}
                 </div>
                 <div>
@@ -312,14 +312,14 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             onClick={onClose}
             className="px-4 py-1.5 text-xs uppercase bg-[var(--surface)] hover:bg-[var(--surface3)] border border-[var(--border)] text-[var(--text-2)] hover:text-white transition-colors"
           >
-            CANCEL
+            Cancel
           </button>
           <button
             onClick={handleConfirmImport}
             disabled={!preview}
             className="px-4 py-1.5 text-xs font-bold uppercase bg-white text-black hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
-            OVERWRITE & IMPORT
+            Replace current tournament
           </button>
         </div>
       </div>

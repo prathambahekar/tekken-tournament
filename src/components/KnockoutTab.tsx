@@ -8,7 +8,6 @@ import { Trophy, Copy, Check, RotateCcw, GitBranch, List } from 'lucide-react';
 interface KnockoutTabProps {
   standings: StandingsRow[];
   koResults: Record<KnockoutMatchId, number | null>;
-  isRoundRobinComplete: boolean;
   totalMatches: number;
   remainingMatches: number;
   previewMode?: boolean;
@@ -27,7 +26,6 @@ interface MatchPosition {
 export const KnockoutTab: React.FC<KnockoutTabProps> = ({
   standings,
   koResults,
-  isRoundRobinComplete,
   onSelectWinner,
   onResetKnockout,
 }) => {
@@ -48,7 +46,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
   const championStandingsRow = championIndex != null ? standings.find((s) => s.i === championIndex) : null;
   const runnerUpStandingsRow = runnerUpIndex != null ? standings.find((s) => s.i === runnerUpIndex) : null;
 
-  // Trigger victory confetti when champion is crowned (monochrome stark white & silver)
+  // Trigger victory confetti when champion is crowned.
   useEffect(() => {
     if (championIndex != null) {
       try {
@@ -56,7 +54,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#ffffff', '#ededed', '#a1a1aa', '#52525b'],
+          colors: ['#e53935', '#38bdf8', '#f5b942', '#2dd4bf'],
         });
       } catch {
         // Safe fallback
@@ -164,7 +162,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
         onClick={() => onSelectWinner(matchId, details.index)}
         className={`w-full flex items-center justify-between px-3 py-2 text-left transition-colors ${compact ? 'h-[36px]' : 'min-h-[46px]'} ${
           isWinner
-            ? 'bg-white text-black border border-white font-bold'
+            ? 'bg-[var(--accent-gold)] text-black border border-[var(--accent-gold)] font-bold'
             : isLoser
             ? 'opacity-40 bg-[var(--surface2)] text-[var(--text-3)] line-through border border-[var(--border)]'
             : 'bg-[var(--surface2)] hover:bg-[var(--surface3)] text-[var(--text)] border border-[var(--border)]'
@@ -184,13 +182,9 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
           </div>
         </div>
 
-        {isWinner ? (
-          <span className="text-[10px] font-bold text-black ml-1 shrink-0 px-1.5 py-0.5 bg-white font-mono">
-            ADVANCED &check;
-          </span>
-        ) : !compact && winner === null ? (
+        {!isWinner && !compact && winner === null ? (
           <span className="text-[10px] text-[var(--text-3)] ml-1 shrink-0 font-mono">
-            ADVANCE &rarr;
+            &rarr;
           </span>
         ) : null}
       </button>
@@ -214,7 +208,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
           height: `${pos.h}px`,
         }}
         className={`p-2.5 flex flex-col justify-between select-none z-10 transition-colors bg-[var(--surface)] border ${
-          isFinal ? 'border-white ring-1 ring-white/50' : 'border-[var(--border2)]'
+          isFinal ? 'border-[var(--accent-gold)] ring-1 ring-[var(--accent-gold)]/50' : 'border-[var(--border2)]'
         }`}
       >
         <div className="flex items-center justify-between gap-1.5 text-[10px] font-mono pb-1 border-b border-[var(--border)] mb-1 uppercase">
@@ -244,12 +238,12 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
       <div
         key={id}
         className={`p-3.5 border bg-[var(--surface2)] space-y-3 ${
-          isFinal ? 'border-white' : 'border-[var(--border)]'
+          isFinal ? 'border-[var(--accent-gold)]' : 'border-[var(--border)]'
         }`}
       >
         <div className="flex items-center justify-between text-xs font-mono border-b border-[var(--border)] pb-2 uppercase">
           <span className="font-bold text-[var(--ink-strong)] flex items-center gap-1.5">
-            {isFinal && <Trophy className="w-3.5 h-3.5 text-white" />}
+            {isFinal && <Trophy className="w-3.5 h-3.5 text-[var(--accent-gold)]" />}
             <span>{match.title}</span>
           </span>
           <span className="text-[10px] text-[var(--text-3)]">
@@ -282,15 +276,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
               <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
                 KNOCKOUT PLAYOFFS
               </h2>
-              {!isRoundRobinComplete && (
-                <span className="text-[9px] px-1.5 py-0.5 border border-[var(--border2)] text-[var(--text-2)] font-mono uppercase tracking-widest">
-                  PROJECTED SEEDS
-                </span>
-              )}
             </div>
-            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
-              SECTION 04 &mdash; DOUBLE-ELIMINATION TOP 4 BRACKET &middot; TAP WINNER TO ADVANCE
-            </p>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -306,7 +292,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
                 }`}
               >
                 <GitBranch className="w-3.5 h-3.5" />
-                <span>[01] FLOWCHART</span>
+                <span>Bracket</span>
               </button>
               <button
                 type="button"
@@ -318,7 +304,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
-                <span>[02] LIST</span>
+                <span>List</span>
               </button>
             </div>
 
@@ -329,7 +315,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
                 title="Reset bracket results"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>RESET</span>
+                <span>Clear bracket</span>
               </button>
             )}
           </div>
@@ -337,10 +323,10 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
 
         {/* Champion Crowning Banner: Dark Swiss Brutalist Monochrome */}
         {championStandingsRow && (
-          <div className="p-4 sm:p-5 bg-[var(--surface2)] border border-white space-y-3 font-mono">
+          <div className="p-4 sm:p-5 bg-[var(--accent-gold-soft)] border border-[var(--accent-gold-border)] space-y-3 font-mono">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 border border-white bg-white text-black flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 border border-[var(--accent-gold)] bg-[var(--accent-gold)] text-black flex items-center justify-center shrink-0">
                   <Trophy className="w-5 h-5 fill-black" />
                 </div>
                 <div>
@@ -352,7 +338,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
                   </h3>
                   {championStandingsRow.fighter && (
                     <p className="text-xs text-[var(--text-2)]">
-                      FIGHTER: <span className="text-white font-bold">{championStandingsRow.fighter.name}</span> ({championStandingsRow.fighter.style})
+                      FIGHTER: <span className="text-[var(--accent-gold-ink)] font-bold">{championStandingsRow.fighter.name}</span> ({championStandingsRow.fighter.style})
                     </p>
                   )}
                 </div>
@@ -371,10 +357,10 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
                 )}
                 <button
                   onClick={handleCopyRecap}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-white text-black hover:opacity-90 transition-opacity shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-[var(--accent-gold)] text-black hover:opacity-90 transition-opacity shrink-0"
                 >
                   {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? 'COPIED' : 'COPY RECAP'}</span>
+                  <span>{copied ? 'Copied' : 'Copy summary'}</span>
                 </button>
               </div>
             </div>
@@ -384,91 +370,95 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
         {/* View Mode 1: Interactive Flowchart Canvas with Clean Technical Connectors */}
         {viewMode === 'flowchart' && (
           <div className="p-3 sm:p-5 border border-[var(--border)] bg-[var(--bg)]">
-            {/* Mobile Scroll Instruction */}
-            <div className="lg:hidden text-xs font-mono text-[var(--text-3)] flex items-center justify-between pb-2 mb-2 border-b border-[var(--border)]">
-              <span>&larr; HORIZONTAL BRACKET PAN &rarr;</span>
-              <span className="text-[10px]">DIAGRAM VIEW</span>
+            {/* Mobile Flowchart */}
+            <div className="lg:hidden space-y-3">
+              <p className="text-xs text-[var(--text-3)] pb-2 border-b border-[var(--border)]">
+                Follow the bracket from the opening matches to the final.
+              </p>
+
+              {[
+                { label: 'Opening matches', matches: ['m1', 'm2'] as KnockoutMatchId[] },
+                { label: 'Next round', matches: ['w', 'l'] as KnockoutMatchId[] },
+                { label: 'Lower final', matches: ['r'] as KnockoutMatchId[] },
+                { label: 'Grand final', matches: ['f'] as KnockoutMatchId[] },
+              ].map((stage, stageIndex) => (
+                <React.Fragment key={stage.label}>
+                  <div className="space-y-2">
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--text-3)]">
+                      {stage.label}
+                    </h3>
+                    <div className="space-y-2">
+                      {stage.matches.map((id) => renderListCard(id))}
+                    </div>
+                  </div>
+                  {stageIndex < 3 && (
+                    <div className="flex justify-center text-lg text-[var(--text-3)]" aria-hidden="true">
+                      ↓
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
             </div>
 
-            <div className="overflow-x-auto no-scrollbar">
-              {/* Stage Column Headers */}
-              <div className="min-w-[1040px] grid grid-cols-4 gap-6 pb-2 text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--text-3)] select-none">
-                <div className="pl-4">01 · OPENING SEMIS</div>
-                <div className="pl-4">02 · ADVANCEMENT & LOWER</div>
-                <div className="pl-4">03 · LOWER FINAL</div>
-                <div className="pl-4 text-[var(--ink-strong)] font-black">04 · GRAND CHAMPIONSHIP</div>
-              </div>
-
-              {/* Diagram */}
-              <div
-                className="relative min-w-[1040px] select-none"
-                style={{ width: `${CANVAS_W}px`, height: `${CANVAS_H}px` }}
-              >
-                <svg
-                  className="absolute inset-0 pointer-events-none"
-                  width={CANVAS_W}
-                  height={CANVAS_H}
-                  aria-hidden="true"
+            {/* Desktop Flowchart */}
+            <div className="hidden lg:block">
+              <div className="overflow-x-auto no-scrollbar">
+                {/* Diagram */}
+                <div
+                  className="relative min-w-[1040px] select-none"
+                  style={{ width: `${CANVAS_W}px`, height: `${CANVAS_H}px` }}
                 >
-                  {CONNECTOR_LINKS.map((link) => {
-                    const start = getExitPoint(link.from, link.type);
-                    const end = getEntryPoint(link.to, link.targetSlot);
-                    const midX = (start.x + end.x) / 2;
+                  <svg
+                    className="absolute inset-0 pointer-events-none"
+                    width={CANVAS_W}
+                    height={CANVAS_H}
+                    aria-hidden="true"
+                  >
+                    {CONNECTOR_LINKS.map((link) => {
+                      const start = getExitPoint(link.from, link.type);
+                      const end = getEntryPoint(link.to, link.targetSlot);
+                      const midX = (start.x + end.x) / 2;
 
-                    const pathD = `M ${start.x} ${start.y} C ${midX} ${start.y}, ${midX} ${end.y}, ${end.x} ${end.y}`;
+                      const pathD = `M ${start.x} ${start.y} C ${midX} ${start.y}, ${midX} ${end.y}, ${end.x} ${end.y}`;
 
-                    const strokeColor = link.isActive
-                      ? '#ffffff'
-                      : 'rgba(255, 255, 255, 0.2)';
-                    const strokeWidth = link.isActive ? 2 : 1;
+                      const strokeColor = link.isActive
+                        ? 'var(--ink-strong)'
+                        : 'var(--border2)';
+                      const strokeWidth = link.isActive ? 2 : 1;
 
-                    return (
-                      <g key={link.id}>
-                        <path
-                          d={pathD}
-                          fill="none"
-                          stroke={strokeColor}
-                          strokeWidth={strokeWidth}
-                          strokeLinecap="square"
-                        />
-                        <rect
-                          x={start.x - 2}
-                          y={start.y - 2}
-                          width={4}
-                          height={4}
-                          fill={strokeColor}
-                        />
-                        <rect
-                          x={end.x - 2}
-                          y={end.y - 2}
-                          width={4}
-                          height={4}
-                          fill={strokeColor}
-                        />
-                      </g>
-                    );
-                  })}
-                </svg>
+                      return (
+                        <g key={link.id}>
+                          <path
+                            d={pathD}
+                            fill="none"
+                            stroke={strokeColor}
+                            strokeWidth={strokeWidth}
+                            strokeLinecap="square"
+                          />
+                          <rect
+                            x={start.x - 2}
+                            y={start.y - 2}
+                            width={4}
+                            height={4}
+                            fill={strokeColor}
+                          />
+                          <rect
+                            x={end.x - 2}
+                            y={end.y - 2}
+                            width={4}
+                            height={4}
+                            fill={strokeColor}
+                          />
+                        </g>
+                      );
+                    })}
+                  </svg>
 
-                {/* Render All 6 Match Cards in Diagram Layout */}
-                {(['m1', 'm2', 'w', 'l', 'r', 'f'] as KnockoutMatchId[]).map((id) =>
-                  renderFlowchartCard(id)
-                )}
-              </div>
-
-              {/* Flowchart Legend */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-3 text-xs font-mono text-[var(--text-3)] border-t border-[var(--border)]">
-                <div className="flex flex-wrap items-center gap-4">
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-[2px] bg-white inline-block"></span>
-                    <span>ADVANCEMENT PATH</span>
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-[1px] bg-white/40 inline-block"></span>
-                    <span>POTENTIAL PATHWAY</span>
-                  </span>
+                  {(['m1', 'm2', 'w', 'l', 'r', 'f'] as KnockoutMatchId[]).map((id) =>
+                    renderFlowchartCard(id)
+                  )}
                 </div>
-                <span className="text-[11px]">CLICK COMPETITOR TO ADVANCE WINNER</span>
+
               </div>
             </div>
           </div>
@@ -489,7 +479,7 @@ export const KnockoutTab: React.FC<KnockoutTabProps> = ({
 
             <div className="space-y-2">
               <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-3)] px-1">
-                STAGE 02 // WINNERS & LOWER BRACKET
+                Winners and second chance bracket
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {renderListCard('w')}

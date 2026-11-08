@@ -106,18 +106,13 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
       {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
       <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
         {/* Section Header with Numbered Label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
-                01 //
-              </span>
-              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
-                COMPETITOR ROSTER
-              </h2>
-            </div>
-            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
-              SECTION 01 &mdash; {n} REGISTERED PARTICIPANTS &middot; ASSIGN FIGHTERS &middot; CONFIGURE FORMAT
+            <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)]">
+              Players
+            </h2>
+            <p className="text-xs text-[var(--text-3)]">
+              Add names, choose fighters, and set the match format.
             </p>
           </div>
 
@@ -135,7 +130,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                 }`}
                 title="Single Round-Robin"
               >
-                SINGLE RR
+                Once
               </button>
               <button
                 type="button"
@@ -147,7 +142,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                 }`}
                 title="Double Round-Robin"
               >
-                DOUBLE RR
+                Twice
               </button>
             </div>
 
@@ -203,21 +198,21 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                       className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
                     >
                       <Shuffle className="w-3.5 h-3.5 text-[var(--text-3)]" />
-                      <span>SHUFFLE SEED ORDER</span>
+                      <span>Shuffle player order</span>
                     </button>
                     <button
                       onClick={handleResetToDefaultNames}
                       className="w-full px-3 py-2 text-left text-[var(--text)] hover:bg-[var(--surface2)] flex items-center gap-2"
                     >
                       <RotateCcw className="w-3.5 h-3.5 text-[var(--text-3)]" />
-                      <span>RESET NAMES TO DEFAULT</span>
+                      <span>Use default names</span>
                     </button>
                     <button
                       onClick={handleClearAllFighters}
                       className="w-full px-3 py-2 text-left text-[var(--danger)] hover:bg-[var(--surface2)] flex items-center gap-2 border-t border-[var(--border)]"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>CLEAR ALL FIGHTERS</span>
+                      <span>Clear all fighters</span>
                     </button>
                   </div>
                 </>
@@ -240,7 +235,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                 {/* Index & Name Field */}
                 <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] pb-1.5">
                   <span className="font-mono text-[10px] text-[var(--text-3)] tracking-widest uppercase">
-                    SEEDED #{String(idx + 1).padStart(2, '0')}
+                    Player {idx + 1}
                   </span>
                   {fighter && (
                     <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--text-3)]">
@@ -280,7 +275,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                           fighter ? 'text-[var(--ink-strong)]' : 'text-[var(--text-3)]'
                         }`}
                       >
-                        {fighter ? fighter.name.toUpperCase() : 'SELECT FIGHTER'}
+                        {fighter ? fighter.name : 'Choose fighter'}
                       </span>
                       {fighter && (
                         <span className="text-[10px] text-[var(--text-3)] truncate block font-sans">
@@ -290,7 +285,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                     </div>
                   </div>
                   <span className="text-xs font-mono text-[var(--text-3)] shrink-0 ml-1">
-                    {fighter ? 'EDIT' : '+'}
+                    {fighter ? 'Change' : 'Choose'}
                   </span>
                 </button>
               </div>
@@ -299,19 +294,19 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
         </div>
 
         {/* Footer Actions: Stark Inverted Monochrome Button */}
-        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-[var(--border)]">
+        <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={handleSaveNames}
               className="px-5 py-2 text-xs font-mono font-bold tracking-wider uppercase bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 active:scale-95 transition-all inline-flex items-center justify-center gap-2"
             >
-              <span>SAVE CONFIGURATION</span>
+              <span>Save changes</span>
               {savedIndicator && <Check className="w-3.5 h-3.5" />}
             </button>
             {savedIndicator && (
               <span className="text-xs font-mono text-[var(--text-2)] uppercase">
-                &check; UPDATED
+                Saved
               </span>
             )}
           </div>
@@ -323,7 +318,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
               className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--border2)] hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>EXPORT JSON</span>
+              <span>Export</span>
             </button>
             <button
               type="button"
@@ -331,14 +326,14 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
               className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--border2)] hover:text-[var(--text)] transition-colors inline-flex items-center gap-1.5"
             >
               <Upload className="w-3.5 h-3.5" />
-              <span>IMPORT JSON</span>
+              <span>Import</span>
             </button>
             <button
               onClick={() => setConfirmResetOpen(true)}
               className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--danger)] hover:text-[var(--danger)] transition-colors inline-flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>RESET RESULTS</span>
+              <span>Clear results</span>
             </button>
           </div>
         </div>
@@ -350,10 +345,10 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
           <div className="w-full max-w-sm p-5 bg-[var(--surface)] border border-[var(--border2)] space-y-4">
             <div className="space-y-1">
               <span className="font-mono text-[10px] text-[var(--danger)] tracking-widest uppercase">
-                WARNING // CONFIRMATION
+                Please confirm
               </span>
               <h4 className="text-sm font-black text-[var(--ink-strong)] font-display uppercase tracking-wide">
-                RESET MATCH RESULTS?
+                Clear match results?
               </h4>
             </div>
             <p className="text-xs text-[var(--text-2)] font-mono leading-relaxed">
@@ -364,7 +359,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                 onClick={() => setConfirmResetOpen(false)}
                 className="px-3 py-1.5 text-xs font-mono uppercase bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border border-[var(--border)]"
               >
-                CANCEL
+                Cancel
               </button>
               <button
                 onClick={() => {
@@ -373,7 +368,7 @@ export const PlayersTab: React.FC<PlayersTabProps> = ({
                 }}
                 className="px-3 py-1.5 text-xs font-mono font-bold uppercase bg-[var(--danger)] text-white hover:opacity-90"
               >
-                CONFIRM RESET
+                Clear results
               </button>
             </div>
           </div>

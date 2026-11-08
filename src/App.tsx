@@ -103,7 +103,6 @@ export default function App() {
 
   const completedMatches = Object.keys(state.res).length;
   const totalMatches = fixtures.length;
-  const isRoundRobinComplete = completedMatches === totalMatches && totalMatches > 0;
   const remainingMatches = totalMatches - completedMatches;
 
   const koState = useMemo(() => computeKnockout(standings, state.ko), [standings, state.ko]);
@@ -297,11 +296,6 @@ export default function App() {
         onTabChange={handleTabChange}
         isDark={isDark}
         onToggleTheme={() => setIsDark((prev) => !prev)}
-        playerCount={n}
-        completedMatches={completedMatches}
-        totalMatches={totalMatches}
-        championName={championName}
-        format={format}
       />
 
       {/* Main Content Viewport with generous whitespace */}
@@ -349,7 +343,6 @@ export default function App() {
           <KnockoutTab
             standings={standings}
             koResults={state.ko}
-            isRoundRobinComplete={isRoundRobinComplete}
             totalMatches={totalMatches}
             remainingMatches={remainingMatches}
             previewMode={previewMode}

@@ -55,23 +55,18 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
       {/* Editorial Section Container: Sharp 1px Border & Deep Black Background */}
       <div className="bg-[var(--surface)] border border-[var(--border)] p-4 sm:p-6 space-y-6">
         {/* Section Header with Numbered Label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-[var(--text-3)] font-semibold tracking-wider">
-                03 //
-              </span>
-              <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)] uppercase tracking-tight">
-                FIXTURES & ROUNDS
-              </h2>
-            </div>
-            <p className="text-xs text-[var(--text-3)] font-mono tracking-wide">
-              SECTION 03 &mdash; ROUND {String(activeRound).padStart(2, '0')} OF {String(totalRounds).padStart(2, '0')} &middot; {playedCount} OF {totalMatches} FIXTURES COMPLETED
+            <h2 className="font-display font-black text-lg sm:text-xl text-[var(--ink-strong)]">
+              Matches
+            </h2>
+            <p className="text-xs text-[var(--text-3)]">
+              Round {activeRound} of {totalRounds} · {playedCount} of {totalMatches} matches scored
             </p>
           </div>
 
           <div className="text-xs font-mono text-[var(--text-3)] tracking-wider">
-            {format === 'single' ? 'SINGLE ROUND-ROBIN' : 'DOUBLE ROUND-ROBIN'}
+            {format === 'single' ? 'Play once' : 'Play twice'}
           </div>
         </div>
 
@@ -106,7 +101,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                   }`}
                   title={`Round ${r}${rDone ? ' (Finished)' : ''}`}
                 >
-                  <span>RD.{String(r).padStart(2, '0')}</span>
+                  <span>Round {r}</span>
                   {rDone && <Check className="w-3 h-3 text-[var(--credit)]" />}
                 </button>
               );
@@ -128,23 +123,23 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
         <div className="flex items-center justify-between gap-2 px-1 pb-1 border-b border-[var(--border)]/60 text-xs font-mono">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[var(--ink-strong)] tracking-wide">
-              ROUND {String(activeRound).padStart(2, '0')} FIXTURES
+            Round {activeRound}
             </span>
             <span className="text-[var(--text-3)]">·</span>
             {isRoundComplete ? (
               <span className="text-[var(--credit)] font-bold flex items-center gap-1">
-                <Check className="w-3 h-3" /> ALL FIXTURES DECIDED
+                <Check className="w-3 h-3" /> All matches scored
               </span>
             ) : (
               <span className="text-[var(--text-3)]">
-                {roundFixtures.filter((f) => !!results[f.id]).length} OF {roundFixtures.length} SCORED
+                {roundFixtures.filter((f) => !!results[f.id]).length} of {roundFixtures.length} scored
               </span>
             )}
           </div>
 
           {restingPlayerName && (
             <div className="text-[var(--text-2)]">
-              <span className="text-[var(--text-3)]">BYE:</span> {restingPlayerName.toUpperCase()}
+              <span className="text-[var(--text-3)]">Sitting out:</span> {restingPlayerName}
             </div>
           )}
         </div>
@@ -187,7 +182,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                   <div
                     className={`p-3 border transition-colors flex flex-col justify-between gap-2.5 ${
                       winnerSide === 'a'
-                        ? 'border-[var(--ink-strong)] bg-[var(--bg)]'
+                        ? 'border-[var(--accent-teal)] bg-[var(--accent-teal-soft)]'
                         : winnerSide === 'b'
                         ? 'border-[var(--border)] opacity-60 bg-[var(--bg)]'
                         : 'border-[var(--border)] bg-[var(--bg)]'
@@ -206,7 +201,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         )}
                       </div>
                       {winnerSide === 'a' && (
-                        <span className="text-[9px] font-mono font-bold text-black bg-white px-1 py-0.5 shrink-0">
+                        <span className="text-[9px] font-mono font-bold text-black bg-[var(--accent-teal)] px-1 py-0.5 shrink-0">
                           WIN
                         </span>
                       )}
@@ -219,7 +214,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         onClick={() => handleScoreClick(fixture.id, 'a20')}
                         className={`min-h-[38px] px-2 text-xs font-bold border transition-colors flex items-center justify-center gap-1 ${
                           res === 'a20'
-                            ? 'bg-white text-black border-white'
+                            ? 'bg-[var(--accent-teal)] text-black border-[var(--accent-teal)]'
                             : 'bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border-[var(--border)]'
                         }`}
                         title="Won 2-0 (+3 pts)"
@@ -232,7 +227,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         onClick={() => handleScoreClick(fixture.id, 'a21')}
                         className={`min-h-[38px] px-2 text-xs font-bold border transition-colors flex items-center justify-center gap-1 ${
                           res === 'a21'
-                            ? 'bg-white text-black border-white'
+                            ? 'bg-[var(--accent-teal)] text-black border-[var(--accent-teal)]'
                             : 'bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border-[var(--border)]'
                         }`}
                         title="Won 2-1 (+2 pts)"
@@ -254,7 +249,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                   <div
                     className={`p-3 border transition-colors flex flex-col justify-between gap-2.5 ${
                       winnerSide === 'b'
-                        ? 'border-[var(--ink-strong)] bg-[var(--bg)]'
+                        ? 'border-[var(--accent-teal)] bg-[var(--accent-teal-soft)]'
                         : winnerSide === 'a'
                         ? 'border-[var(--border)] opacity-60 bg-[var(--bg)]'
                         : 'border-[var(--border)] bg-[var(--bg)]'
@@ -273,7 +268,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         )}
                       </div>
                       {winnerSide === 'b' && (
-                        <span className="text-[9px] font-mono font-bold text-black bg-white px-1 py-0.5 shrink-0">
+                        <span className="text-[9px] font-mono font-bold text-black bg-[var(--accent-teal)] px-1 py-0.5 shrink-0">
                           WIN
                         </span>
                       )}
@@ -286,7 +281,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         onClick={() => handleScoreClick(fixture.id, 'b20')}
                         className={`min-h-[38px] px-2 text-xs font-bold border transition-colors flex items-center justify-center gap-1 ${
                           res === 'b20'
-                            ? 'bg-white text-black border-white'
+                            ? 'bg-[var(--accent-teal)] text-black border-[var(--accent-teal)]'
                             : 'bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border-[var(--border)]'
                         }`}
                         title="Won 2-0 (+3 pts)"
@@ -299,7 +294,7 @@ export const MatchesTab: React.FC<MatchesTabProps> = ({
                         onClick={() => handleScoreClick(fixture.id, 'b21')}
                         className={`min-h-[38px] px-2 text-xs font-bold border transition-colors flex items-center justify-center gap-1 ${
                           res === 'b21'
-                            ? 'bg-white text-black border-white'
+                            ? 'bg-[var(--accent-teal)] text-black border-[var(--accent-teal)]'
                             : 'bg-[var(--surface2)] text-[var(--text)] hover:bg-[var(--surface3)] border-[var(--border)]'
                         }`}
                         title="Won 2-1 (+2 pts)"
